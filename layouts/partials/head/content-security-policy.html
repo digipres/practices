@@ -5,7 +5,7 @@
 {{ $css := resources.Get "bootstrap-icons/font/bootstrap-icons.min.css" }}
 {{ with $css }}
   {{ $css := . | fingerprint "sha512" -}}
-  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $js.Data.Integrity }}">
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
 {{ end }}
 <!-- Leaflet support -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
