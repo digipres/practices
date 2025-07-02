@@ -1,0 +1,22 @@
+<!-- https://report-uri.com/home/generate -->
+<!-- Modifying this adding [script-src: 'unsafe-eval'] for PageFind WASM etc. -->
+<meta http-equiv='Content-Security-Policy' content="script-src 'self' 'unsafe-eval' 'unsafe-inline' unpkg.com; style-src 'self' 'unsafe-inline' unpkg.com; object-src 'none'; base-uri 'none'">
+<!-- Also using this hook to add additional resources -->
+{{ $js := resources.Get "js/pretty-json.js" }}
+{{ with $js }}
+  {{ $js := . | minify | fingerprint "sha512" -}}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+{{ end }}
+{{ $css := resources.Get "bootstrap-icons/font/bootstrap-icons.min.css" }}
+{{ with $css }}
+  {{ $css := . | fingerprint "sha512" -}}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $js.Data.Integrity }}">
+{{ end }}
+<!-- Leaflet support -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>

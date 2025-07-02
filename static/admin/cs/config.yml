@@ -1,0 +1,18 @@
+backend:
+  name: test-repo
+  login: false
+media_folder: assets
+collections:
+  - label: Test
+    name: test
+    files:
+      - file: test.yml
+        name: test
+        label: Test
+        fields:
+          - name: 'json'
+            label: 'Json'
+            widget: 'create-select'
+            url: 'https://jsonplaceholder.typicode.com/users'
+            attribute: 'name'
+            mode: 'json'
