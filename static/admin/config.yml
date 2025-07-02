@@ -91,19 +91,19 @@ collections:
   - label: "Geographic Location"
     name: "location"
     widget: "map"
-    type: "Polygon"
-    hint: "Please indicate the rough centre of the region covered. Required for local groups."
+    hint: "Please indicate the rough centre of the region covered."
     required: true
   - label: "Geographic Region"
     name: region
     widget: string
     required: true
     hint: "Please describe the overall geographic region this group covers."
-  - label: 'Coverage'
-    name: 'coverage'
-    widget: 'image'
+  - label: 'Map of Geographic Region'
+    name: 'region_map'
+    widget: "map"
+    type: "Polygon"
     required: false
-    hint: "If you have an image that indicated the geographic coverage of this group, please add it here."
+    hint: "You can use this to draw a rough outline of the geographic region this group covers."
   - label: 'Image'
     name: 'image'
     widget: 'image'

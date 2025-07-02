@@ -1,42 +1,30 @@
 [[main]]
 name = "Home"
-url = ""
+pageRef = "index"
 weight = 10
 
 [[main]]
 name = "About"
-url = "about"
+pageRef = "about"
 weight = 20
 title = "Made with ❤️ by the Hugo Bootstrap Theme team"
 
 [[main]]
-identifier = "blog"
-name = "Blog"
+identifier = "groups"
+name = "Groups"
 weight = 40
 
 [[main]]
 name = "All"
-url = "post"
+pageRef = "groups"
 weight = 100
-parent = "blog"
+parent = "groups"
 
 [[main]]
-name = "Hugo"
-url = "tags/hugo"
+name = "Local & Regional"
+pageRef = "groups/local"
 weight = 20
-parent = "blog"
-
-[[main]]
-name = "Bootstrap"
-url = "tags/bootstrap"
-weight = 30
-parent = "blog"
-
-[[main]]
-identifier = "docs"
-name = "Docs"
-url = "page"
-weight = 50
+parent = "groups"
 
 [[social]]
   name = "GitHub"
