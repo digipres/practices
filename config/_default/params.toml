@@ -5,18 +5,18 @@
 # https://gohugo.io/templates/internal/#twitter-cards
 # https://schema.org/Thing
 # https://schema.org/Article
-description = "Hugo theme for a secure, blazing fast and SEO-ready static website, using Bootstrap 5."
+description = "Experimenting with Hugo."
 images = ['images/logo.svg','images/site-feature-image.png']
-mainMenuLogo = "images/logo.svg"
+#mainMenuLogo = "images/logo.svg"
 
 # For favicons
 ## Chrome Browser
 themeColor = "#fff"
 
 # Alert
-alert = false
-alertDismissable = true
-alertText = "Introducing this new service! <a class=\"alert-link stretched-link\" href=\"https://salvus.site/\">Check out Total Security</a>"
+alert = true
+alertDismissable = false
+alertText = "This is a temporary prototype site and should not be used or linked to yet!"
 
 # Pre-footer
 footerAbout = true

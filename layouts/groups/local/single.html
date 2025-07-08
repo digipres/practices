@@ -1,12 +1,7 @@
 {{ define "main" }}
 
-<div class="container py-3">
+<div class="container py-3 border bg-white rounded-3">
 
-  {{ with .Resources.Get .Params.image }}
-    {{ with .Resize "x150" }}
-      <img class="float-end m-1" src="{{ .RelPermalink }}" alt="{{ $.Title }}" width="{{ .Width }}" height="{{ .Height }}">
-    {{ end }}
-  {{ end }}
   <h1>{{ .Title }}</h1>
 
   <table class="table table-striped">
@@ -15,29 +10,6 @@
       <th scope="row">Region</th>
       <td>
         {{ .Params.region }}
-  <div id="map" class="my-2"></div>
-    <style>
-        #map { height: 300px; }
-    </style>
-    <script type="module">
-        var map = L.map('map').setView([19, 15], 13);
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            minZoom: 2,
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }).addTo(map);
-
-        var markerArray = [];
-        {{ with .Params.location }}
-            markerArray.push( L.geoJSON(JSON.parse("{{ . }}")).addTo(map) );
-        {{ end }}
-        {{ with .Params.region_map }}
-            markerArray.push( L.geoJSON(JSON.parse("{{ . }}")).addTo(map) );
-        {{ end }}
-
-        var group = L.featureGroup(markerArray).addTo(map);
-        map.fitBounds(group.getBounds());
-
-    </script>
       </td>
     </tr>
     <tr>

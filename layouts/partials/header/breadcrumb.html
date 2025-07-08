@@ -1,0 +1,18 @@
+<div class="container py-3 mb-2 bg-white border rounded-3">
+<nav class="header-breadcrumb my-0" aria-label="breadcrumb">
+    <div class="container">
+        <ol class="breadcrumb my-0">
+            {{ define "breadcrumb" }}
+                {{ with .Parent }}
+                    {{ template "breadcrumb" . }}
+                    <li class="breadcrumb-item"> <a href="{{ .RelPermalink }}">{{ if .IsHome }}Home{{ else }}{{ .LinkTitle }}{{ end }}</a> </li>
+                {{ end }}
+            {{ end }}
+            {{ if not .IsHome }}
+                {{ template "breadcrumb" . }}
+                <li class="breadcrumb-item active" aria-current="page">  {{ .LinkTitle }}</li>
+            {{ end }}
+        </ol>
+    </div>
+</nav>
+</div>
