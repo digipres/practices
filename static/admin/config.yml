@@ -88,27 +88,16 @@ collections:
     widget: string
     required: false
     hint: "A contact email address. __WARNING! This will be made public along with the rest of the information on this page!__"
-  - label: "Geographic Location"
-    name: "location"
-    widget: "map"
-    hint: "Please indicate the rough centre of the region covered."
-    required: true
   - label: "Geographic Region"
     name: region
     widget: string
     required: true
     hint: "Please describe the overall geographic region this group covers."
-  - label: 'Map of Geographic Region'
-    name: 'region_map'
+  - label: "Approximate Geographic Location"
+    name: "location"
     widget: "map"
-    type: "Polygon"
-    required: false
-    hint: "You can use this to draw a rough outline of the geographic region this group covers."
-  - label: 'Image'
-    name: 'image'
-    widget: 'image'
-    required: false
-    hint: "If this group has a logo, please add it here."
+    hint: "Please indicate the rough centre of the region covered."
+    required: true
   - label: Further Details
     name: body
     widget: markdown
@@ -185,12 +174,6 @@ collections:
     regenerate: false
     prefix: wf
     hint: "An automatically-generated unique identifier for this workflow."
-  - name: 'json'
-    label: 'JSON (TEST)'
-    widget: 'create-select'
-    url: 'https://jsonplaceholder.typicode.com/users'
-    attribute: 'name'
-    mode: 'json'
   - label: Description
     name: description
     widget: text
