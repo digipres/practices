@@ -1,5 +1,6 @@
 /.quarto/
+/.venv/
+/_site/
 
 **/*.quarto_ipynb
 
-_site
