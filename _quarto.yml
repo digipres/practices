@@ -10,16 +10,15 @@ book:
   date: "8/18/2021"
   chapters:
     - index.qmd
-    #- intro.qmd
-    #- summary.qmd
-    #- references.qmd
+    - tool-demos/droid/index.qmd
+    - about.qmd
   favicon: logo.png
   twitter-card: true
   site-url: https://digipres.org/practices/
   search: true
   repo-url: https://github.com/digipres/practices/
   repo-actions: [edit]
-  downloads: [pdf, epub, docx]
+  downloads: [pdf, epub]
   navbar:
     right:
       - about.qmd
@@ -39,7 +38,7 @@ format:
     css: styles.css
   pdf:
     papersize: a4
-    documentclass: scrreprt
+#    documentclass: scrreprt # Note that this line makes 'quarto preview' crash!?
 #  epub:
 #    cover-image: cover.png
 
