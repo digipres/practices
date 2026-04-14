@@ -1,5 +1,5 @@
-# Sample workflow for building and deploying a Hugo site to GitHub Pages
-name: Deploy Hugo site to Pages
+# Sample workflow for building and deploying a Quarto site to GitHub Pages
+name: Deploy Quarto site to Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -31,58 +31,31 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-    env:
-      HUGO_VERSION: 0.147.2
-      HUGO_ENVIRONMENT: production
-      TZ: America/Los_Angeles
+    permissions:
+      pages: write
+      id-token: write
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
         with:
-          submodules: recursive
-          fetch-depth: 0
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v5
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
-      - name: Cache Restore
-        id: cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            ${{ runner.temp }}/hugo_cache
-          key: hugo-${{ github.run_id }}
-          restore-keys:
-            hugo-
-      - name: Configure Git
-        run: git config core.quotepath false
-      - name: Build with Hugo
+          version: pre-release
+      - name: "Build"
+        shell: bash
         run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_path }}/" \
-            --cacheDir "${{ runner.temp }}/hugo_cache"
-      - name: Cache Save
-        id: cache-save
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            ${{ runner.temp }}/hugo_cache
-          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
-      - name: Run PageFind Indexing
-        run: npx pagefind --site public/
-      - name: Upload artifact
+          [ ! -f _quarto.yml ] && echo -e "project:\n  output-dir: _site" > _quarto.yml
+          if grep -q "output-dir: _site" _quarto.yml; then
+            quarto render
+          else
+            quarto render --output-dir _site
+          fi
+      - name: "Configure GitHub Pages"
+        uses: actions/configure-pages@v5
+      - name: "Upload Pages Artifact"
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: "./_site"
 
   # Deployment job
   deploy:
