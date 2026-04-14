@@ -1,24 +1,27 @@
 project:
-  type: book
+  type: website
 
 editor:
   render-on-save: true
 
-book:
+website:
   title: "DigiPres.org"
-  author: "DigiPres.org Contributors"
-  date: "8/18/2021"
-  chapters:
-    - index.qmd
-    - tool-demos/droid/index.qmd
-    - about.qmd
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - index.qmd
+      - section: "Tool Demos"
+        href: tool-demos/index.qmd
+        contents:
+          - text: "DROID"
+            href: tool-demos/droid/index.qmd
   favicon: logo.png
   twitter-card: true
   site-url: https://digipres.org/practices/
   search: true
   repo-url: https://github.com/digipres/practices/
   repo-actions: [edit]
-  downloads: [pdf, epub]
   navbar:
     right:
       - about.qmd
@@ -27,8 +30,6 @@ book:
       - icon: twitter
         href: https://twitter.com
 
-#bibliography: references.bib
-
 syntax-highlighting: pygments
 
 format:
@@ -36,10 +37,4 @@ format:
     theme:
       - cosmo
     css: styles.css
-  pdf:
-    papersize: a4
-#    documentclass: scrreprt # Note that this line makes 'quarto preview' crash!?
-#  epub:
-#    cover-image: cover.png
-
-
+    toc: true

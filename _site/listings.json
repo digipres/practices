@@ -12,5 +12,11 @@
       "/blog/posts/post-with-code/index.html",
       "/blog/posts/welcome/index.html"
     ]
+  },
+  {
+    "listing": "/tool-demos/index.html",
+    "items": [
+      "/tool-demos/droid/index.html"
+    ]
   }
 ]

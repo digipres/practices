@@ -1,4 +1,4 @@
-# Welcome {.unnumbered}
+# Welcome
 
 This is the welcome mat...
 

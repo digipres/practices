@@ -1,0 +1,7 @@
+---
+title: Tool Demos
+listing:
+  contents: "*/*.qmd"
+  type: table
+---
+
