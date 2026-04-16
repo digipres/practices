@@ -24,7 +24,6 @@ website:
   repo-actions: [edit]
   navbar:
     right:
-      - about.qmd
       - icon: github
         href: https://github.com/
       - icon: twitter
