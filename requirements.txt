@@ -1,1 +1,1 @@
-juptyer
+jupyter==1.1.1
