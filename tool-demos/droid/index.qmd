@@ -1,8 +1,14 @@
 ---
+output-file: "tool-demo-droid"
 format:
   html: default
+  epub: default
   pdf:
+    title: pdf-title
+    toc: true
     papersize: a4
+    number-sections: true
+    colorlinks: true
 ---
 # Tool Demo: DROID
 
