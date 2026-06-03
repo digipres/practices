@@ -1,0 +1,63 @@
+---
+output-file: tool-demo-checksum-by-corz
+author: The Digital Preservation Coalition
+date: 2011-05-25
+---
+
+::: {.callout-warning}
+This page was created in 2011 and may be out of date!
+:::
+
+<img src="checksum_icon_256px.png" style="float:right; margin: 10px;"/>
+
+# Checksum By Corz
+
+## Introduction
+
+On this page we will look at how to use a popular tool for integrity checking, Checksum by Corz. We will start with the advantages and disadvantages of using the tool followed by:
+
+- Downloading and installing Checksum by Corz
+- Creating checksums
+- Verifying checksums
+- Finding an error while verifying checksums
+
+## Advantages and Disadvantages of Using Checksum by Corz
+
+Unlike DROID, which is a characterization tool that can produce checksums, Checksum by Corz’s sole purpose is integrity checking. Before using it, it is worthwhile considering its advantages and disadvantages to make sure it is the right tool for your context.
+
+**Advantages**
+
+- Free and easy to download/install
+- Very fast
+- Very simple to use (good for non-specialists e.g. depositors)
+- Saves checksums alongside content
+
+**Disadvantages**
+
+- Saves checksums in a custom format. While the files can be opened successfully in other apps it makes it more difficult to transfer to a processible format such as a spreadsheet
+- Saves error logs as .html files rather than a processible format
+- Not available for Macs
+
+## Downloading and Installing Checksum by Corz
+
+The following video explains how to download and install Checksum by Corz. The link to download the tool is: <https://corz.org/windows/software/checksum/>
+
+{{< video https://www.youtube.com/embed/XRBnwRijje0 >}}
+
+## Creating Checksums
+
+The following video explains how to create checksums for digital content using Checksum by Corz.
+
+{{< video https://www.youtube.com/embed/4shKnJ9Ugrk >}}
+
+## Verifying Checksums
+
+The following video shows how to use the tool to verify checksums, allowing you to monitor the integrity of digital content over time.
+
+{{< video https://www.youtube.com/embed/lrpujs86K4c >}}
+
+## Finding Errors When Verifying Checksums
+
+The following video shows how the tool displays errors found during the verification process.
+
+{{< video https://www.youtube.com/embed/vFwQchIvkDE >}}

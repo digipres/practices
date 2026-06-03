@@ -1,25 +1,24 @@
 ---
 output-file: "tool-demo-droid"
-format:
-  html: default
-  epub: default
-  pdf:
-    title: pdf-title
-    toc: true
-    papersize: a4
-    number-sections: true
-    colorlinks: true
+author: The Digital Preservation Coalition
+date: 2011-05-25
 ---
-# Tool Demo: DROID
+::: {.callout-warning}
+This page was created in 2011 and may be out of date!
+:::
+
+<img src="droid-logo.png" style="float:right; margin: 10px;"/>
+
+# DROID
 
 ## Introduction
+
 
 On this page we will look at the characterization tool DROID, including
 how to install, open, and use the tool. DROID was developed by the
 Digital Preservation department of The National Archives (UK) (TNA) and
 ti is free to [download from TNA’s website](https://www.bit.ly/TNADROID)
-and is supported by a thorough user guide. There is an active community
-of DROID users and the tool has also been integrated into a number of
+and is supported by a [thorough user guide](https://digital-preservation.github.io/droid/). There is an active community of DROID users and the tool has also been integrated into a number of
 larger repository systems.
 
 ## How does DROID work?
