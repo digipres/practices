@@ -24,6 +24,7 @@ Practices
     - Archiving Web Pages (link to SciOp)
     - Copying & Moving Files
     - Assessing Files
+    - Adding a new format signature to PRONOM
 - Tool Demos
     - DROID (ID + Checksum + Report)
     - Fixity Pro

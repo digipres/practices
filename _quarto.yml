@@ -5,17 +5,18 @@ editor:
   render-on-save: true
 
 website:
-  title: "DigiPres.org"
+  title: "DigiPres.org Practices"
   sidebar:
     style: "docked"
     search: true
     contents:
       - index.qmd
+      - section: "Reports"
+        href: reports/index.qmd
+        contents: reports/*/index.qmd
       - section: "Tool Demos"
         href: tool-demos/index.qmd
-        contents:
-          - text: "DROID"
-            href: tool-demos/droid/index.qmd
+        contents: tool-demos/*/index.qmd
   favicon: logo.png
   twitter-card: true
   site-url: https://digipres.org/practices/
@@ -28,6 +29,12 @@ website:
         href: https://github.com/
       - icon: twitter
         href: https://twitter.com
+  announcement: 
+    icon: info-circle
+    dismissable: true
+    content: "**Warning** - This is an early-stage experimental prototype! All may change! See the homepage for more information."
+    type: warning
+    position: above-navbar
 
 syntax-highlighting: pygments
 
@@ -37,3 +44,10 @@ format:
       - cosmo
     css: styles.css
     toc: true
+  epub: default
+  pdf:
+    title: pdf-title
+    toc: true
+    papersize: a4
+    number-sections: true
+    colorlinks: true

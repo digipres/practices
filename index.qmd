@@ -1,5 +1,44 @@
+---
+listing: 
+  - id: tool-demos
+    contents: "tool-demos/*/*.qmd"
+    type: grid
+  - id: reports
+    contents: "reports/*/*.qmd"
+    type: table
+format:
+  html: default
+---
 # Welcome
 
-This is the welcome mat...
+::: {.callout-warning}
+## This site is under development!
+
+If you have any comments or questions, please get in touch (see below for details).
+::: 
+
+Welcome to DigiPres.org Practices, a place to publish shared technical documentation on tools and processes relating to the practice of digital preservation.
+
+This is an early experimental prototype, using the [Quarto](http://quarto.org/) publication system to combine a range of practical resources into a single reference library.
+
+## Reports
+
+:::{#reports}
+:::
+
+## Tool Demos
+
+:::{#tool-demos}
+:::
+
+
+## Funding & Development
+
+The initial development of this site was funded by Yale University Library and the Digital Preservation Coalition (DPC) as part of the [Registries of Good Practice project](https://github.com/digipres/registries-of-practice-project).
+
+Updates and additions have been funded by the [DPC Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members).
+
+## Get In Touch
+
 
 
