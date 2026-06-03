@@ -1,6 +1,5 @@
 ---
 output-file: us-gpo-icufl-review-2026
-title: US GPO ICFUL Review 2026
 author: 
   - name: Dr Andrew N. Jackson
     id: anj
@@ -10,9 +9,6 @@ author:
       - name: The Digital Preservation Coalition
         url: dpconline.org
 date: 2026-06-03
-format:
-  html:
-    code-fold: false
 jupyter: python3
 ---
 # Reviewing the Indiana University CD-ROM & Floppy Library for the U.S. Government Publication Office
@@ -364,6 +360,15 @@ Some work that has been carried out and could be documented.
 - List the contents of specific items.
 - Deeper Dives (individual items)
 - IDEAS
+
+<details>
+<summary>Source code for <tt>generate_index.py</tt></summary>
+
+```python
+{{< include data/generate_index.py >}}
+```
+
+</details>
 
 ```python
 import pandas as pd
