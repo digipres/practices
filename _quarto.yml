@@ -7,16 +7,16 @@ editor:
 website:
   title: "DigiPres.org Practices"
   sidebar:
-    style: "docked"
+    style: "floating"
     search: true
     contents:
       - index.qmd
-      - section: "Reports"
-        href: reports/index.qmd
-        contents: reports/*/index.qmd
       - section: "Tool Demos"
         href: tool-demos/index.qmd
         contents: tool-demos/*/index.qmd
+      - section: "Reports"
+        href: reports/index.qmd
+        contents: reports/*/index.qmd
   favicon: logo.png
   twitter-card: true
   site-url: https://digipres.org/practices/
