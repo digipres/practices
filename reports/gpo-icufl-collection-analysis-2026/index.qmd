@@ -10,6 +10,9 @@ author:
         url: dpconline.org
 date: 2026-06-03
 jupyter: python3
+resources:
+  - "data/gpo-icufl-items.csv"
+  - "data/gpo-icufl-files.parquet"
 ---
 # Reviewing the Indiana University CD-ROM & Floppy Library for the U.S. Government Publication Office
 
@@ -370,10 +373,10 @@ Some work that has been carried out and could be documented.
 
 </details>
 
-```python
+```{python}
 import pandas as pd
 
-df = pd.read_parquet('/content/drive/MyDrive/Colab Notebooks/GPO/gpo-icufl.parquet')
+df = pd.read_parquet('./data/gpo-icufl-files.parquet')
 
 df.head(5)
 ```
