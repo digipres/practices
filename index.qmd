@@ -14,7 +14,9 @@ format:
 ::: {.callout-warning}
 ## This site is an experimental prototype!
 
-If you have any comments or questions, please get in touch (see [DigiPres.org](https://www.digipres.org/) for details).
+This is being used to explore how to host various kinds of technical documentation. The current state of this site may not reflect the final destination for all of this content!
+
+If you have any comments or questions, please [get in touch!](mailto:andrew.jackson@dpconline.org?subject=DigiPres.org%20Practices).
 ::: 
 
 Welcome to DigiPres.org Practices, a place to publish shared technical documentation on tools and processes relating to the practice of digital preservation.

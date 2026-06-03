@@ -1,7 +1,14 @@
 ---
 output-file: us-gpo-icufl-review-2026
 title: US GPO ICFUL Review 2026
-author: The Digital Preservation Coalition
+author: 
+  - name: Dr Andrew N. Jackson
+    id: anj
+    orcid: 0000-0001-8168-0797
+    email: andrew.jackson@dpconline.org
+    affiliation: 
+      - name: The Digital Preservation Coalition
+        url: dpconline.org
 date: 2026-06-03
 format:
   html:
@@ -12,7 +19,8 @@ jupyter: python3
 
 ::: {.callout-note}
 
-This work for the [U.S. Government Publishing Office](https://www.gpo.gov/) was carried in April/May 2026 and was funded by the [Digital Preservation Coalition](https://www.dpconline.org/) Member Support programme.
+<a href="https://www.dpconline.org/"><img src="../../DPCLogoSquare.png" width="80px" style="float: right; margin: 5px;"></a>
+This work for the [U.S. Government Publishing Office](https://www.gpo.gov/) was carried in April/May 2026 and was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members).
 
 :::
 
