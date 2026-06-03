@@ -26,10 +26,8 @@ website:
   navbar:
     right:
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
-  announcement: 
+        href: https://github.com/digipres/practices
+  announcement:
     icon: info-circle
     dismissable: true
     content: "**Warning** - This is an early-stage experimental prototype! All may change! See the homepage for more information."
