@@ -1,0 +1,8 @@
+[build]
+  publish = "./_site"
+
+  command = "build-netlify.sh"
+
+
+[[plugins]]
+package = "@quarto/netlify-plugin-quarto"
