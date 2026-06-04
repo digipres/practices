@@ -23,18 +23,18 @@ Welcome to DigiPres.org Practices, a place to publish shared technical documenta
 
 This is an early experimental prototype, using the [Quarto](http://quarto.org/) publication system to combine a range of practical resources into a single reference library.
 
-## Tool Demos
-
-These tool demos were originally part of the [DPC Digital Preservation Handbook](https://www.dpconline.org/handbook). They are not going to be included in the next version of the handbook, so we are placing them here so they are still available and can be updated by the wider community.
-
-:::{#tool-demos}
-:::
-
 ## Reports
 
 This section is for detailed technical reporting and analysis on digital preservation practices.
 
 :::{#reports}
+:::
+
+## Tool Demos
+
+These tool demos were originally part of the [DPC Digital Preservation Handbook](https://www.dpconline.org/handbook). They are not going to be included in the next version of the handbook, so we are placing them here so they are still available and can be updated by the wider community.
+
+:::{#tool-demos}
 :::
 
 ## Funding & Development

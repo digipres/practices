@@ -2,3 +2,4 @@ jupyter==1.1.1
 pandas==2.3.3
 pyarrow==24.0.0
 duckdb==1.5.3
+altair==6.1.0

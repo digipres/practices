@@ -19,15 +19,15 @@ resources:
 ::: {.callout-note}
 
 <a href="https://www.dpconline.org/"><img src="../../DPCLogoSquare.png" width="80px" style="float: right; margin: 5px;"></a>
-This work for the [U.S. Government Publishing Office](https://www.gpo.gov/) was carried in April/May 2026 and was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members).
+This reports summarises roughly five days of work for the [U.S. Government Publishing Office](https://www.gpo.gov/) during April/May/June 2026. The work was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
 
 :::
 
 ## Introduction
 
-The [Indiana University CD-ROM & Floppy Library](https://webapp1.dlib.indiana.edu/virtual_disk_library/) (IUCFL) is a web site that provides access to a collection of around 1,200 disk images totalling 1.7TB of data. The custom-built web interface cannot be supported long term, so a copy of the underlying data has been submitted to the U.S. Government Publication Office (GPO).
+The Indiana University CD-ROM & Floppy Library (IUCFL) collection is held by the U.S. Government Publication Office (GPO). It represents an archival copy of content that is currently accessible through [this Virtual CD-ROM/Floppy Disk Library web site](https://webapp1.dlib.indiana.edu/virtual_disk_library/). That custom-built web interface cannot be supported long term, so a copy of the underlying data has been submitted to the GPO for long-term preservation in the form of ~1,000 disk images (totalling 1.7TB).
 
-The goal of this review is to survey the data submitted for long-term preservation, determine if the data appears to be complete and valid, and outline how future access might be assured. The results of this review are to be made publically available in order to provide practical information for reuse by the GPO and others.
+The goal of this review is to survey these files, determine if the data appears to be complete and valid, and outline how future access might be assured. The results of this review are to be made publicly available in order to provide practical information for reuse by the GPO and others.
 
 ### Questions
 
@@ -39,31 +39,35 @@ The goal of this review is to survey the data submitted for long-term preservati
 
 ## Setting up the collaborative documentation
 
-An initial document was drafted in [Quarto](https://quarto.org/) Markdown, with an eye to future publication. However, as this is quite a complex report with a lot of subtle context, the [conversion tools](https://quarto.org/docs/tools/jupyter-lab.html#converting-notebooks) were used to convert this to a [Jupyter Notebook file](https://jupyter-notebook.readthedocs.io/en/stable/notebook.html), which could be hosted on [Google Colab](https://developers.google.com/colab).
+An initial document was drafted in [Quarto](https://quarto.org/) Markdown, with an eye to future publication. However, this was not well-suited to the initial collaborative phase of the work the [Quarto conversion tools](https://quarto.org/docs/tools/jupyter-lab.html#converting-notebooks) were used to convert this to a [Jupyter Notebook file](https://jupyter-notebook.readthedocs.io/en/stable/notebook.html), which could be hosted on [Google Colab](https://developers.google.com/colab).
 
-This means the collaborative features of Google Colab could be used to coordinate across parties, check the results are understandable be all parties, and make sure everyone is happy with the text. The Quarto conversion and publication tooling can then be used to produce a long-term stable version of the report, independant of large scale cloud infrastructure.
+This means the collaborative features of Google Colab could be used to coordinate across parties, check the results are understandable be all parties, and make sure everyone is happy with the text. The Quarto conversion and publication tooling could then be used to produce this long-term stable version of the report, independent of large scale cloud infrastructure.
 
-Note that no AI tools were used in the creation of this report.
+Note that no AI tools were used to write this report, or develop the scripts used here.  Some AI tools were used while searching the internet for related tools and resources.
 
 ## Setting up remote access
 
-As the data is not sensitive, the GPO were able to make the collection accessible over SFTP in the US, or worldwide by registering a fixed IP address.
+Most institutions have a range of policies and procedures that must be followed when enabling access to content by third parties. With this in mind, setting up access was raised early, long before the project officially started. This ensured there was plenty of time to clarify the process, create and securely transfer access credentials and negotiate the networks and protocols involved.
 
-To avoid having to download the whole thing in order to perform a basic initial assessment, we set up a temporary access system that keeps the work isolated from any production systems and is easy to clean up afterwards.
+Fortunately, as the data is not sensitive, access was relatively straightforward and the GPO were able to make a copy of the collection accessible over SFTP in the US, or worldwide by registering a fixed IP address with their I.T. team. 
+
+Next, to carry out the assessment, we needed to set up a temporary access system. Ideally one isolated from any production systems (DPC or GPO) and is easy to clean up afterwards.
 
 ### Setting up a GitHub Codespace
 
-We use [GitHub Codespaces](https://github.com/features/codespaces) to run a free, temporary Linux box in the U.S., avoiding the need to pay for a server or set up a fixed IP address elsewhere. Specifically, we used the [DigiPres Sandbox](https://github.com/digipres/sandbox#readme) created by the [Registries of Good Practice project](https://www.dpconline.org/digipres/collaborative-projects/registries-of-good-practice), which comes pre-loaded with some specific tools for digital preservation work.
+We decided to use [GitHub Codespaces](https://github.com/features/codespaces) to run a free, temporary Linux box in the U.S., avoiding the need to pay for a server or set up a fixed IP address elsewhere. Specifically, we used the [DigiPres Sandbox](https://github.com/digipres/sandbox#readme) (created by the [Registries of Good Practice project](https://www.dpconline.org/digipres/collaborative-projects/registries-of-good-practice)), which comes pre-loaded with some specific tools for digital preservation work.
 
-At the time of writing, the GitHub Codespace local disk volume is 32GB by default. Nowhere near enough to store all the collection, but enough to cache commonly re-used data like index files and the starts/ends of larger files.
+At the time of writing, the local disk volume of a GitHub Codespace is 32GB by default. Nowhere near enough to store all the collection, but enough to cache file system metadata, smaller metadata files, and hold parts of larger files while they are being accessed.
 
-To complete the editorial setup, two browser windows were used so the Google Colab document and the Codespace environment could run side-by-side.
+To complete the workspace setup, two browser windows were used so the Google Colab document and the DigiPres Sandbox environment could run side-by-side. Metadata and data files could be downloaded from the Sandbox and uploaded to Google Drive for analysis in Google Colab, and later downloaded for analysis in this document.
 
 ### Setting up an RClone connection
 
-We chose to use [RClone](https://rclone.org/) to access the files over SFTP. While the data itself is not sensitive, it's still important to be careful with the SFTP access credentials. Firstly, when creating the credentials, the GPO ensures that these were unique credentials dedicated to this task, and as such, that the corresponding account only had _read_ access to _the specific files needed_ (see [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)).
+We used [RClone](https://rclone.org/) to access the files over SFTP, as this tool is able to access a remote service and only download the data when needed. It also has good credential management support. While the data itself is not sensitive, it's still important to be careful with the SFTP access credentials, as these do permit access to a GPO server. 
 
-Secondly, when [configuring RClone](https://rclone.org/commands/rclone_config_create/) to talk to the server (which RClone calls a 'remote'), care was taken to store the password in an [encrypted](https://rclone.org/commands/rclone_config_encryption_set/) form and use a separate dedicated password to protect the configuration. This latter password is either entered when needed or stored as a temporary environment variable if necessary
+Firstly, when creating the credentials, the GPO ensured that these were unique credentials dedicated to this task, and as such, that the corresponding account only had _read_ access to _the specific files needed_ (see [Principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege)).
+
+Secondly, when [configuring RClone](https://rclone.org/commands/rclone_config_create/) to talk to the server (which RClone calls a 'remote'), care was taken to store the password in an [encrypted](https://rclone.org/commands/rclone_config_encryption_set/) form and use a _separate_ dedicated password to protect the configuration. This latter password can be entered when needed, or stored as a temporary environment variable:
 
 ```bash
 export RCLONE_CONFIG_PASS=XXXXXXXX
@@ -79,10 +83,9 @@ This lists the files at the top-level of the `gpo` 'remote' presented by the SFT
 
 ### Setting up an RClone mount
 
-To simplify things futher, we also set up an RClone ['mount'](https://rclone.org/commands/rclone_mount/). This means we have a folder on the Codespace server that acts like it's local but it actually pulling in files from the remote server as needed. To make it easy to run and re-run over, we set up a script like this:
+To simplify exploration, we up an RClone ['mount'](https://rclone.org/commands/rclone_mount/). This means we have a folder on the Codespace server that acts like it's local but is actually pulling in files from the remote server as needed. We set it up like this:
 
 ```bash
-#!/bin/bash
 mkdir -p ./remote
 rclone mount --vfs-cache-mode full gpo: ./remote 2>&1 > rclone-remote-mount.log &
 ```
@@ -92,15 +95,24 @@ This creates a folder called `remote` and runs a background `rclone` process tha
 At this point, we e.g. can list the files at the top-level of the remote like this:
 
 ```bash
-$ cd remote
-$ ls -l
+cd remote
+ls -l
 ```
+
+It proved helpful to run a recursive list process, like this:
+
+```bash
+ls -R
+```
+
+As this prompted the RClone service to download and cache all of the remote filesystem metadata.  Occasionally, things would slow down or fail, but after checking the logs, it was clear these were usually temporary problems due to RClone temporarily overloading the remote SFTP server. When that happened, it was usually sufficient to just retry things a few moments later.
+
 
 ## Initial exploration via the RClone mount
 
-Manually exploring the file system this way worked well. It was easy to determine the overall structure of the dataset. Within a containing folder called `GPO_CDFLOPPY_DATA` we find a long list of folders with numbers for names and one file called `part_2.md5` (a checksum manifest).
+Manually exploring the file system this way worked well, and it was easy to determine the overall structure of the dataset. Within a containing folder called `GPO_CDFLOPPY_DATA` we found a long list of folders with numbers for names and one file called `part_2.md5` (a checksum manifest).
 
-The directories appear to correspond to the numbers used on the web site. So, for example, the web entry [Urban soil lead abatement demonstration project : EPA data dictionary with associated data sets](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/923520) has `923520` in the URL, corresponding to:
+The names of the folders correspond to the numbers used on the web site. So, for example, the web entry [Urban soil lead abatement demonstration project : EPA data dictionary with associated data sets](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/923520) has `923520` in the URL, corresponding to:
 
 ```bash
 $ ls -l remote/GPO_CDFLOPPY_DATA/923520
@@ -111,7 +123,7 @@ total 1454
 -rw-r--r-- 1 jovyan jovyan    6144 Mar  5 16:56 923520-mets.xml
 ```
 
-Every directory appears to be the same structure, with an `.img` or `.iso` file depending on whether the source was a floppy disk or a CD-ROM/DVD. This is accompianed by a MARC file, a METS file, and an `.idx` file.
+Every directory appeared to be the same basic structure, with an `.img` or `.iso` file depending on whether the source was a floppy disk or a CD-ROM/DVD. This is accompanied by a MARC XML file, a METS XML file, and an `.idx` file.
 
 ### Counting items
 As a first simple check, we see how many folders there are:
@@ -132,13 +144,15 @@ jovyan@codespaces-5550f4:/workspaces/sandbox$ ls -1 remote/GPO_CDFLOPPY_DATA/735
 ls: cannot access 'remote/GPO_CDFLOPPY_DATA/7356902': No such file or directory
 ```
 
-So, the `[Restricted to IU]` subset are not present. This is difficult to verify without a list of all IDs and their access status, but it is reasonable to assume this was taken care of when the export was created. This does, however, mean we can't independently verify the collection is complete at this level. At least without writing a web crawler that scrapes the whole collection and pulls out the access status of each entry.
+So, at least some of `[Restricted to IU]` subset are not present. The precise situation is difficult to verify without a list of all IDs and their access status, but it is reasonable to assume this was taken care of when the export was created. This does, however, mean we can't independently verify the collection is complete at this level. At least without writing a web crawler that scrapes the whole collection and pulls out the access status of each entry.
+
+This was raised with GPO, who were then able to take this information and consider how they might use it to verify that the overall collection completeness is as expected.
 
 ### Running tools
 
 We also experimented with running tools directly on the files, e.g. the [Siegfried](https://www.itforarchivists.com/siegfried) format identification tool. This illustrated the limits of the RClone mount approach.
 
-Even using the `-throttle` option to slow it down, the files could not be downloaded fast enough for the overall system to work as expected. Oddly, the errors thrown were `permission denied` errors, perhaps stemming from RClone overloading the remote SFTP server. In general, while the files were findable and openable, running tools on large files was not reliable until the RClone system had had a chance to download the contents and cache them locally. The upshot of this was that by waiting a few minutes between retries, commands like this worked fine:
+Even using the `-throttle` option to slow it down, the files could not be downloaded fast enough for the overall system to work as expected. Oddly, the errors thrown were reported as `permission denied` errors, despite apparently stemming from RClone overloading the remote SFTP server. In general, while the files were findable and openable, running tools on large files and large sets of files was not reliable until the RClone system had had a chance to download the contents and cache them locally. The upshot of this was that by waiting a few minutes between retries, commands like this worked fine:
 
 ```bash
 jovyan@codespaces-5550f4:/workspaces/sandbox$ sf -csv -throttle 5s remote/GPO_CDFLOPPY_DATA/5259763
@@ -151,13 +165,26 @@ remote/GPO_CDFLOPPY_DATA/5259763/5259763-marc.xml,7002,2026-03-05T14:45:58Z,,pro
 remote/GPO_CDFLOPPY_DATA/5259763/5259763-mets.xml,7929,2026-03-05T14:45:58Z,,pronom,fmt/101,Extensible Markup Language,1.0,application/xml,Text (Mark-up),"extension match xml; byte match at 0, 19",
 ```
 
-Unfortunatley, this meant that running `sf` over the whole collection was probably not practical, at least at this stage.
+Unfortunately, this meant that running `sf` over the whole collection was probably not practical, at least at this stage.
 
 ## Inspecting an item
 
-Picking [World ocean atlas 1998](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399) as a reasonable complex example, the disk contents appear to match well with the web presentation. The [Raw Mets Record](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/mets) matches the one on disk.
+Picking [World ocean atlas 1998](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399) as a reasonable complex example, the disk contents appear to match well with the web presentation. e.g. the ["Raw Mets Record" download](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/mets) appears to match the one on disk.
 
-All metadata presented by the web interface appears to be in the METS. The MARC is much more difficult to understand, but appear to hold a subset of the information in the METS files.
+All metadata presented by the web interface appears to be in the METS. The MARC is much more difficult for me to understand, but appears to hold a subset of the information in the METS files.
+
+However, while looking at the METS files in VS Code, the editor appeared to indicate some problems with the XML:
+
+![Screenshot showing the XML issues in VS Code using the RedHat XML extension](./example-mets-problems.png)
+
+This shows two problems:
+
+- _Error while downloading 'http://www.loc.gov/standards/mods/v3/mods-3-0.xsd'. Server returned HTTP response code: 503 for URL: http://www.loc.gov/standards/mods/v3/mods-3-0.xsd with code: 503 Service Unavailable'._
+- _Element name 'smdWrap' is invalid. One of the following is expected: mdRef, mdWrap_
+
+The first problem appears to be an issue with the loc.gov server. The `http` URL for the MODS Schema throws an error, but if we switch to `https` it works. The other `http` URLs all work fine. This was fed back to colleagues at the Library of Congress.
+
+The second problem is stranger. The METS schema makes no mention of an `smdWrap` element, and so it seems likely that these `mets:smdWrap` elements should really be `mets:mdWrap` elements, unless this is a practice from an older version of the METS schema. Having checked versions 1.1, 1.12.1 and 2 of the schema, this does not appear to be the case.
 
 The `.idx` files appear to be custom index files, enumerating the contents of the `.iso` and `.img` files. As example, here's the first 20 lines from an example `.idx` file:
 
@@ -185,29 +212,31 @@ masks/landsea.msk|531360|922903252|text/plain|17692672,531360;
 programs|0|922904631|DIR|
 ```
 
-It seems highly likely that this index is used to construct the [Browse](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/FID1913) functionality of the web suite.
+It seems highly likely that these index files are used to construct the [Browse](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/FID1913) functionality of the web suite.
 
-First, there is a header documenting some information about the analysis of the original image file. After than there, is a long list of bar `|` separated data.
+In terms of file structure, first there is a header documenting some information about the analysis of the original image file. After than there, is a long list of bar (`|`) separated data.
 
-In the second set of data, the full path of every file and directory is included as the first column. The third column is likely to be a UNIX-style timestamp. The forth column holds the content type, likely used to select an appropriate icon in the browse view and as the `Content-Type` header for the download.
+In that second set of data, the full path of every file and directory is included as the first column, and the file size as the second. The third column seems likely to be a UNIX-style timestamp. The forth column holds the content type, likely used to select an appropriate icon in the browse view and as the `Content-Type` header for the download.
 
-The last column, present only for files, is likely to be the position and size of that file within the `.iso`/`.img` file. This would mean that, rather than having separate files, when the user requests [`coordin1.gif`](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/FID1913/coordin1.gif), the web site can open up the `.iso` file, skip to byte `409,231,360`, and read the next `5,410` bytes and returns them with an `image/gif` header so the browser renders the image.
+The last column, present only for files (not the folders), is likely to be the position and size of the chunk(s) of that file within the `.iso`/`.img` file. This would mean that, rather than having separate files for the disk image content, when the user requests [`coordin1.gif`](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4300399/FID1913/coordin1.gif), the web site can open up the `.iso` file, skip to byte `409,231,360`, and read the next `5,410` bytes and returns them with an `image/gif` header so the browser renders the image.
 
-This means the website can provide the individual files to users by 'carving them out' on demand, without knowing anything about the `.img` and `.iso` formats. The `.idx` file takes the place of the file system metadata in the image file.
+This means the website can provide the individual files to users by 'carving them out' on demand, without knowing anything about the `.img` and `.iso` formats. In this way, the `.idx` file takes the place of the file system metadata in the image file.
 
 So, in summary, we have:
 
 ```
-<PATH>|<SIZE>|<TIMESTAMP>|<TYPE>|<OFFSET>,<SIZE>
+<PATH>|<SIZE>|<TIMESTAMP>|<TYPE>|<OFFSET>,<SIZE>;+
 ```
+
+Where the final `+` indicates that the `<OFFSET>,<SIZE>;` can be repeated, as some files are made up of separate chunks of data that need to be concatenated together.
 
 Overall, the architectural design of the web service itself appears to be well suited to long-term preservation.  The whole system appears to primarily rely on simple scripts that present the 'master' data which is held in plain files. There is no complex stack or database system to unpick in order to get at the underlying data. Just relatively simple text formats that are used to present data on demand.
 
-The only exception to this appears to be the search functionality, which presumably depends on some additional index database technology. However, it is clear that no _unique_ data lies in that system, and that a new replacement index could be constructed from what is provided here.
+The only exception to this appears to be the website's search functionality, which presumably depends on some additional index database technology. However, there is no evidence that there is any _unique_ data in that system. A new replacement index could be constructed from what is provided.
 
-## Checking overall completeness
+## Checking item-level completeness
 
-As a first step, we focus on attempting to verify the layout of the files is as we expect. That is for each numeric identifier, `#`, we have:
+As a first step, we focus on attempting to verify the layout of the files for each item is as we expect. That i,s for each numeric identifier, `#`, we have:
 
 - A directory called `#`, containing:
   - A file called `#/#-mets.xml`.
@@ -218,23 +247,24 @@ As a first step, we focus on attempting to verify the layout of the files is as 
 
 Checking any deeper requires opening up the files, but this check is enough to find any major problems and only needs file system metadata.
 
-First, we listing all the files, using RClone's support for JSON output to collect a simple file we can analyse here:
+First, we listing all the files, using RClone's support for JSON output to collect a simple data file we can analyse here:
 
 ```bash
 $ rclone jslson -R gpo: > gpo.lsjson
 ```
 
-We can then keep a compressed copy of that data and start to work with it here. First, we load it up and take a look:
+We can then download and keep a copy of that data (compressed to save space) and start to work with it. First, we load it up and take a look. This uses the Python [Pandas](https://pandas.pydata.org/) library, which is very widely used for data analysis and can load data from a wide range for formats and encodings.
 
 ```{python}
 import pandas as pd
 
 df = pd.read_json('data/gpo.lsjson.gz')
 
+# Just show the first five entries:
 df.head(5)
 ```
 
-This is telling us about the folders as well as the files, and we're not particularly interested in folders, so we can filter out the entries where the `MimeType` is `inode/directory`. After doing that, the first five entries are:
+This is telling us about the folders as well as the files, and we're not particularly interested in folders, so we can use Pandas to filter out the entries where the `MimeType` is `inode/directory`, like this:
 
 ```{python}
 df_f = df[df['MimeType'] != 'inode/directory']
@@ -311,7 +341,7 @@ We can then look for problems. e.g. this is a list of all the items where there 
 df_i[(df_i["mets"] != 1) | (df_i["marc"] != 1)]
 ```
 
-i.e. we can see there are three examples where the MARC and METS files are not there.
+i.e. we can see there are three examples where we have `iso` and `.iso.idx` files, but the MARC and METS files are not there.
 
 Similarly, we can see how many items have 'unexpected' items inside them:
 
@@ -319,9 +349,9 @@ Similarly, we can see how many items have 'unexpected' items inside them:
 df_i[df_i["unexpected"] > 0]
 ```
 
-This shows the same item noted earlier.
+This shows the same three items noted earlier.
 
-We can also check if there are any cases where there `.img.idx` and `.img` files and the `.iso.idx` and `.iso` files don't match up:
+We can also check if there are any cases where the numbers of `.img.idx` and `.img` files and the `.iso.idx` and `.iso` files don't match up:
 
 ```{python}
 df_i[(df_i["imgs"] > 0) & (df_i["imgs"] != df_i["img.idxs"])]
@@ -331,38 +361,122 @@ df_i[(df_i["imgs"] > 0) & (df_i["imgs"] != df_i["img.idxs"])]
 df_i[(df_i["isos"] > 0) & (df_i["isos"] != df_i["iso.idxs"])]
 ```
 
-*Fortunately*, it seems there are none.
+And no mismatches were found.
 
-**Aside on this approach:** Using a Python table and query language in this way does work, but the whole thing very specific to this case and the implementation and the presentation of results is quite complicated. It would be much better to have a way of more formally specifying expected directory layouts in an understandable language, a bit like format signatures. A project called [`dirschema`](https://materials-data-science-and-informatics.github.io/dirschema/) establishes a lot of the groundwork for this, and an interesting follow-on project would be to look at extending this to identify file layout conventions like data packages.
+### Alternative techniques
 
-## Comparing with the part_2.md5 manifest
+Using a custom Python script and the Pandas table and query language in this way does work, but the whole thing very specific to this case and the implementation and the presentation of results is quite complicated. It would be much better to have a way of more explicitly specifying expected directory layouts in an understandable way, a bit like format signatures. Projects like [`pathschema`](https://apollo-roboto.dev/projects/pathschema/) and [`dirschema`](https://materials-data-science-and-informatics.github.io/dirschema/) potentially establish a lot of the groundwork for this, and an interesting follow-on project would be to look at extending this to identify file layout conventions like data packages.
 
-The `part_2.md5` manifest holds some helpful information. Manually checking this against the findings above, it seems that _all_ the 'unexpected' files are present, but at the top-level rather than inside the `614173` folder. So this seems to have been a result of an accident, like a drag-and-drop error. This is very easy to do accidentally, but fortunately, fairly simple to revert.
+Indeed, a brief experiment with the `pathschema` tool showed that it was possible to create a `gpo-icufl.pathschema` file that [uses globs and regular expressions](https://github.com/ApolloRoboto/python-pathschema#syntax) to define the expected file naming conventions:
 
-Of the other three cases, `5536432` and `5536436` are both present in the manifest, and there are no metadata files listed there either. So these two appear to be in the same state as the manifest expects, but are not complete.
+```pathschema
++"[0-9]{6,7}"/
+	+*-mets.xml
+	+*-marc.xml
+	+"[0-9]{14}(|_[1-9])\.(img|iso)"
+	+"[0-9]{14}(|_[1-9])\.(img|iso)\.idx"
++part_2.md5
+```
+
+This schema can be compared against the contents the ICUFL data folder like this:
+
+```bash
+python -m pathschema gpo-icufl.pathschema remote/GPO_CDFLOPPY_DATA/
+```
+
+Running this produces a report listing all the files found in the data folder, and whether they meet the expected layout or now.
+
+This is not as precise as a custom script, as it does not check that the item identification numbers match up, that each `.idx` file corresponsed to a specific image file, or that the files are more than zero bytes in size.  However, it was pretty easy to set up and run, it's a lot easier to understand what it's doing, and it correctly spotted all the actual problems we found.
+
+As well as describing local conventions, this `pathschema` approach is a promising potential way of definined file naming conventions for multi-part file formats in general.
+
+## Comparing with the manifest
+
+The `part_2.md5` manifest holds some helpful information. Checking this against the findings above, it seems that _all_ the 'unexpected' files are present, but at the top-level rather than inside the `614173` folder. So this seems to have been a result of an accident, likely a drag-and-drop error, at some point in time after the creation of the manifest. This is very easy to do accidentally, but fortunately, fairly simple to revert.
+
+Of the other three cases, `5536432` and `5536436` are both present in the manifest, and there are no metadata files listed there either. So these two appear to be in the same state as the manifest expects, and any loss the predates the creation of the manifest.
 
 The final case, `2845618`, does not appear in the manifest at all. However, the `part_2.md5` manifest only lists around three hundred distinct items, and the final collection has over a thousand, so this implies there may be a larger `part_1.md5` manifest somewhere that contains more information.
 
-## 2026-04-21 Pausing for a moment...
+## A pause
 
-At this point, as there appear to be problems with the data at the file layout level, we pause to see if those can be resolved before continuing in anger.
+At this point, we paused the investigation and reported back the findings so far, so that GPO could take the information on board and start to decide what to do next.  After some discussion, it was decided that we should continue the investigation, and start to look at the contents of the disk images.
 
-Some work that has been carried out and could be documented.
+## Looking inside (without looking inside)
 
-- How the set of .idx files was gathered.
-- Analysing the .idx files to get a list of file extensions.
-- Notes from deep dives on some examples, SAS 6 files, corrupted *DB* that wasn't actually corrupted in the end.
+Rather that download all the data and unpack it, we decided to see how far we can get using only the metadata. The METS files and the `.idx` files were all gathered and downloaded, and these could then be used to build an index of all the files in the collection. This would be enough to start to characterise the contents of the disks, as file extensions are a sufficient format indicator for an initial assessment.
 
-## Write up plan...
+### Aside: on carefully gathering the files
 
-- made the Parquet index
-- can query like this
-- extract extension profiles and use in Workbench
-- extract fine-grained extension profile
-- Lookup extensions to find the items.
-- List the contents of specific items.
-- Deeper Dives (individual items)
-- IDEAS
+To copy a subset of the files, we started by just listing the files we were interested in. e.g.
+
+```bash
+find remote/GPO_CDFLOPPY_DATA/ -name *-mets.xml
+```
+
+This creates a long list of simple flat paths, like:
+
+```
+remote/GPO_CDFLOPPY_DATA/1006666/1006666-mets.xml
+remote/GPO_CDFLOPPY_DATA/1006770/1006770-mets.xml
+remote/GPO_CDFLOPPY_DATA/1007939/1007939-mets.xml
+...
+```
+
+Rather than attempt to write a script (or do anything else complicated that it coulg go wrong), we used search and replace commands in the text editor (first `/[0-9]+-mets.xml/$0 local-mets\/$0/` then `/^/cp -n /`) to turn each line into a script that would copy each METS file into a `local-mets` folder:
+
+```
+cp -n remote/GPO_CDFLOPPY_DATA/1006666/1006666-mets.xml local-mets/1006666-mets.xml
+cp -n remote/GPO_CDFLOPPY_DATA/1006770/1006770-mets.xml local-mets/1006770-mets.xml
+cp -n remote/GPO_CDFLOPPY_DATA/1007939/1007939-mets.xml local-mets/1007939-mets.xml
+...
+```
+
+ These copy command use the `-n` or `--no-clobber` option to prevent the script from re-trying copy operations that had already succeeded. This meant we could re-run the script to continue the process if there was a problem with the remote copy that caused the script to fail. After the script ran successfully, the files could be zipped up and downloaded.
+
+## Parsing the METS
+
+In order to be able to link the files in the images to the files on the web site, we needed one more bit of information that wasn't in the filesystem paths or metadata. When browsing the contents of the disk images, the website uses a file identifier of the form `FID####` to determine which file to open, and so to reconstruct those paths, we need to know the mapping from `FID####` identifiers to disk image files like `30000116480330.iso`. This mapping is held in the METS files, like this:
+
+```xml
+  <mets:fileSec>
+    <mets:fileGrp USE="Disk Image">
+      <mets:file ID="FID1218" MIMETYPE="application/octet-stream" DMDID="ID30000116480330">
+        <mets:FLocat xlink:href="30000116480330.iso" LOCTYPE="URL" xlink:title="30000116480330.iso"/>
+      </mets:file>
+    </mets:fileGrp>
+  </mets:fileSec>
+```
+
+As we were having to parse the METS anyway, it made sense to extract a few more useful bits of metadata at the same time. A small Python script was written that went through all the local files and built a CSV file ([`gpo-icufl-items.csv`](./data/gpo-icufl-items.csv)) with the basic metadata in it, like this:
+
+```csv
+item_id,title,date,publisher,fids,fnames
+4909450,WAVE-saver for office buildings,[2000],EPA,FID77,30000078832957.iso
+4285370,Voluntary reporting of greenhouse gases,1996,"Voluntary Reporting of Greenhouse Gas Program, U.S. Dept. of Energy, Energy Information Administration",FID217|FID2078|FID2451|FID2474,30000044896086.iso|30000048805984.iso|32000000478034.iso|30000053565168.iso
+...
+```
+
+For reference, the source code for the script is included below:
+
+<details>
+<summary>Source code for <tt>parse_mets.py</tt></summary>
+
+```python
+{{< include data/parse_mets.py >}}
+```
+
+</details>
+
+
+## Generating an index
+
+A second script was then created, designed to build a index database from the available metadata. It works by:
+
+- Reading in the items CSV file and extracting the `FID####` mappings.
+- Read through the `.idx` files (stored in a ZIP file because they are quite bulky).
+- Extract the file-level information from the `.idx` files and combine with the item metadata.
+- Output the resulting table of information in the [Parquet](https://parquet.apache.org/) format.
 
 <details>
 <summary>Source code for <tt>generate_index.py</tt></summary>
@@ -373,6 +487,12 @@ Some work that has been carried out and could be documented.
 
 </details>
 
+This format was used because there are over six million files in this collection, and a plain CSV version of the data was over 1.2GB in size. The Parquet format compresses the contents very well, leading to a file just 175MB in size that can be parsed and queried effectively.
+
+## Using the index
+
+The Pandas library understand the Parquet format, so this can be used to explore the data:
+
 ```{python}
 import pandas as pd
 
@@ -381,30 +501,110 @@ df = pd.read_parquet('./data/gpo-icufl-files.parquet')
 df.head(5)
 ```
 
+However, the Pandas query language is quite cumbersome. Instead, we can use the [DuckDB](https://duckdb.org/) run SQL queries on those data tables. 
+
+### File Extension Collection Profiles
+
+To count up all the differnet file extensions in the collection, we can use:
+
 ```{python}
 import duckdb
 
-results = duckdb.sql("""
-  SELECT LOWER(extension), count(*) AS count
+duckdb.sql("""
+  SELECT extension, count(*) AS count
+  FROM df
+  GROUP BY extension
+  ORDER BY count DESC;
+  """).df()
+```
+
+This does count upper and lower case versions as different extensions, but we can adjust the query to look at the difference that makes:
+
+```{python}
+duckdb.sql("""
+  SELECT LOWER(extension) as extension, count(*) AS count
   FROM df
   GROUP BY LOWER(extension)
   ORDER BY count DESC;
   """).df()
-
-results
 ```
 
+Even after this change, there are still over 3,200 unique file extensions across the whole dataset.
+
+The DuckDB SQL language is quite powerful, and it can be used to perform even more complicate queries. In this example, we count file extensions, but also group the results by item they came from, giving us a format profile per item:
 
 ```{python}
-results = duckdb.sql("""
-  SELECT item_id, extension, mode() WITHIN GROUP (ORDER BY date_part('year', make_timestamp(timestamp * 1_000_000))) as year, count(*) AS count
+duckdb.sql("""
+  SELECT item_id::INTEGER as item_id, extension, count(*) AS count
+  FROM df
+  GROUP BY item_id, extension
+  ORDER BY item_id DESC, count DESC;
+  """).df()
+```
+
+This can be extended to facet by year, within each item:
+
+```{python}
+duckdb.sql("""
+  SELECT item_id::INTEGER as item_id, extension, date_part('year', make_timestamp(timestamp * 1_000_000)) as year, count(*) AS count
+  FROM df
+  GROUP BY item_id, year, extension
+  ORDER BY item_id DESC, year DESC, count DESC;
+  """).df()
+```
+
+Or even to select the most common year for each combination of item and file extension:
+
+```{python}
+duckdb.sql("""
+  SELECT item_id::INTEGER as item_id, extension, mode() WITHIN GROUP (ORDER BY date_part('year', make_timestamp(timestamp * 1_000_000))) as year, count(*) AS count
   FROM df
   GROUP BY item_id, extension
   ORDER BY year DESC, item_id DESC, count DESC;
   """).df()
-
-results
 ```
+
+These last queries show up a common problem with dates from filesystem metadata. Item `5548795` apparently contains 23 `.pdf` files from the year 2040! Nevertheless, this does show that date information can be extracted and so potentially used to help guide format identification, as most of the data data appears to be realistic:
+
+```{python}
+import altair as alt
+
+data = duckdb.sql("""
+  SELECT date_part('year', make_timestamp(timestamp * 1_000_000)) as year, count(*) AS count
+  FROM df
+  WHERE year > 1985 AND year < 2010
+  GROUP BY year
+  ORDER BY year ASC, count DESC;
+  """).df()
+
+alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
+    x = alt.X('year:O', axis=alt.Axis(labelAngle=-45)),
+    y = 'count:Q',
+    tooltip=['year', 'count']
+).properties(width=420)
+```
+
+
+## Write up plan...
+
+- extract extension profiles and use in Workbench
+- extract fine-grained extension profile
+- Lookup extensions to find the items.
+- List the contents of specific items.
+- Deeper Dives (individual items)
+- Notes from deep dives on some examples, SAS 6 files, corrupted *DB* that wasn't actually corrupted in the end.
+- IDEAS
+
+
+## Conclusions
+
+
+- Completeness
+- XML issues
+
+
+
+
 
 
 
