@@ -381,7 +381,7 @@ df = pd.read_parquet('./data/gpo-icufl-files.parquet')
 df.head(5)
 ```
 
-```python
+```{python}
 import duckdb
 
 results = duckdb.sql("""
@@ -395,7 +395,7 @@ results
 ```
 
 
-```python
+```{python}
 results = duckdb.sql("""
   SELECT item_id, extension, mode() WITHIN GROUP (ORDER BY date_part('year', make_timestamp(timestamp * 1_000_000))) as year, count(*) AS count
   FROM df
@@ -411,7 +411,7 @@ results
 ----
 
 
-```python
+```{python}
 from numpy import result_type
 import ipywidgets as widgets
 from IPython.display import HTML, display_html, clear_output
@@ -455,7 +455,7 @@ update_results()
 ----
 
 
-```python
+```{python}
 duckdb.sql("""
 SELECT item_id, media, path, date_part('year', make_timestamp(timestamp * 1_000_000)) as year
 FROM df

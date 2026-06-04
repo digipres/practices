@@ -1,7 +1,7 @@
 [build]
   publish = "./_site"
 
-  command = "build-netlify.sh"
+  command = "./build-netlify.sh"
 
 
 [[plugins]]

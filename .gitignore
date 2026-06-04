@@ -4,3 +4,5 @@
 
 **/*.quarto_ipynb
 
+node_modules
+
