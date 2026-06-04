@@ -503,7 +503,7 @@ df.head(5)
 
 However, the Pandas query language is quite cumbersome. Instead, we can use the [DuckDB](https://duckdb.org/) run SQL queries on those data tables. 
 
-### File Extension Collection Profiles
+### File extensions
 
 To count up all the differnet file extensions in the collection, we can use:
 
@@ -531,7 +531,7 @@ duckdb.sql("""
 
 Even after this change, there are still over 3,200 unique file extensions across the whole dataset.
 
-The DuckDB SQL language is quite powerful, and it can be used to perform even more complicate queries. In this example, we count file extensions, but also group the results by item they came from, giving us a format profile per item:
+The DuckDB SQL language is quite powerful, and it can be used to perform more complicate queries. For example, we can count file extensions, but also group the results by item they came from, giving us a format profile per item:
 
 ```{python}
 duckdb.sql("""
@@ -542,7 +542,31 @@ duckdb.sql("""
   """).df()
 ```
 
-This can be extended to facet by year, within each item:
+
+### Files and dates
+
+We can also use DuckDB to explore the dates associated with files in the collection, by taking the supplied timestamp and interpreting it as such:
+
+```{python}
+import altair as alt
+
+data = duckdb.sql("""
+  SELECT date_part('year', make_timestamp(timestamp * 1_000_000)) as year, count(*) AS count
+  FROM df
+  WHERE year > 1985 AND year < 2010
+  GROUP BY year
+  ORDER BY year ASC, count DESC;
+  """).df()
+
+alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
+    x = alt.X('year:O', axis=alt.Axis(labelAngle=-45)),
+    y = 'count:Q',
+    tooltip=['year', 'count']
+).properties(width=420)
+```
+
+
+This can be used to extend the item-level format profiles to facet by year (within each item):
 
 ```{python}
 duckdb.sql("""
@@ -564,37 +588,24 @@ duckdb.sql("""
   """).df()
 ```
 
-These last queries show up a common problem with dates from filesystem metadata. Item `5548795` apparently contains 23 `.pdf` files from the year 2040! Nevertheless, this does show that date information can be extracted and so potentially used to help guide format identification, as most of the data data appears to be realistic:
+These last queries show up a common problem with dates from filesystem metadata. Item `5548795` apparently contains 23 `.pdf` files from the year 2040! Nevertheless, this does show that date information can be extracted and so potentially used to help guide format identification, as most of the date data appears to be realistic (as shown above)
 
-```{python}
-import altair as alt
+## Reusing the index
 
-data = duckdb.sql("""
-  SELECT date_part('year', make_timestamp(timestamp * 1_000_000)) as year, count(*) AS count
-  FROM df
-  WHERE year > 1985 AND year < 2010
-  GROUP BY year
-  ORDER BY year ASC, count DESC;
-  """).df()
-
-alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
-    x = alt.X('year:O', axis=alt.Axis(labelAngle=-45)),
-    y = 'count:Q',
-    tooltip=['year', 'count']
-).properties(width=420)
-```
-
-
-## Write up plan...
+### Publishing format collection profiles
 
 - extract extension profiles and use in Workbench
+
+### An experimental exploration tool
+
 - extract fine-grained extension profile
 - Lookup extensions to find the items.
 - List the contents of specific items.
+
+## Access experiments
+
 - Deeper Dives (individual items)
 - Notes from deep dives on some examples, SAS 6 files, corrupted *DB* that wasn't actually corrupted in the end.
-- IDEAS
-
 
 ## Conclusions
 
@@ -603,63 +614,15 @@ alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
 - XML issues
 
 
+1. Does this appear to be a complete record of the data presented via the web site?
+   - ...
+2. Is this collection of disk images self-consistent? Does it appear to be valid?
+   - ...
+3. Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?
+   - ...
+4. What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as _'easy to access'/'safe to ignore'/'requires investigation'_?
+   - ...
+5. What might access look like? Does emulation play a role in this?
+   - ...
 
 
-
-
-
-----
-
-
-```{python}
-from numpy import result_type
-import ipywidgets as widgets
-from IPython.display import HTML, display_html, clear_output
-
-q_ext = widgets.Text(
-    value='',
-    placeholder='Type something',
-    description='Extensions to find:',
-    disabled=False
-)
-
-def as_link(x):
-  return f'<a href="https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/{x}" target="_blank">{x}</a>'
-
-def update_results(results_html=None):
-  display(q_ext)
-  display(button)
-  display_html(results_html)
-
-def update_search(b):
-  clear_output()
-  sql_q = """
-    SELECT item_id, count(*) as count
-    FROM df
-    WHERE LOWER(extension) == LOWER('.{ext}')
-    GROUP BY item_id
-    ORDER BY count DESC;
-  """.format(ext=q_ext.value)
-  #print(sql_q)
-  df_items = duckdb.sql(sql_q).df()
-  # Format item ids as links:
-  df_items['item_id'] = df_items['item_id'].apply(as_link)
-  results_html = HTML(df_items.to_html(escape=False))
-  update_results(results_html)
-
-button = widgets.Button(description="Go")
-button.on_click(update_search)
-
-update_results()
-```
-----
-
-
-```{python}
-duckdb.sql("""
-SELECT item_id, media, path, date_part('year', make_timestamp(timestamp * 1_000_000)) as year
-FROM df
-WHERE item_id == '5548795'
-ORDER BY item_id DESC, year DESC;
-""").df()
-```
