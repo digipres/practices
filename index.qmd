@@ -3,13 +3,9 @@ listing:
   - id: tool-demos
     contents: "tool-demos/*/*.qmd"
     type: grid
-    exclude:
-      draft: true  
   - id: reports
     contents: "reports/*/*.qmd"
     type: table
-    exclude:
-      draft: true  
 format:
   html: default
 ---

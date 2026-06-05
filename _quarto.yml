@@ -29,11 +29,12 @@ website:
     right:
       - icon: github
         href: https://github.com/digipres/practices
+  draft-mode: unlinked
   announcement:
     icon: info-circle
     dismissable: true
     content: "**Warning** - This is an early-stage experimental prototype! All may change! See the homepage for more information."
-    type: warning
+    type: primary
     position: above-navbar
 
 syntax-highlighting: pygments

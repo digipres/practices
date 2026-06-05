@@ -3,7 +3,5 @@ title: Reports
 listing:
   contents: "*/index.qmd"
   type: table
-  exclude:
-    draft: true  
 ---
 
