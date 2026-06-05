@@ -1,4 +1,5 @@
 ---
+draft: true
 output-file: us-gpo-icufl-review-2026
 author: 
   - name: Dr Andrew N. Jackson
@@ -19,7 +20,7 @@ resources:
 ::: {.callout-note}
 
 <a href="https://www.dpconline.org/"><img src="../../DPCLogoSquare.png" width="80px" style="float: right; margin: 5px;"></a>
-This reports summarises roughly five days of work for the [U.S. Government Publishing Office](https://www.gpo.gov/) during April/May/June 2026. The work was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
+This reports summarises work with the [U.S. Government Publishing Office](https://www.gpo.gov/) during April/May/June 2026. The work was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
 
 :::
 
@@ -146,7 +147,7 @@ ls: cannot access 'remote/GPO_CDFLOPPY_DATA/7356902': No such file or directory
 
 So, at least some of `[Restricted to IU]` subset are not present. The precise situation is difficult to verify without a list of all IDs and their access status, but it is reasonable to assume this was taken care of when the export was created. This does, however, mean we can't independently verify the collection is complete at this level. At least without writing a web crawler that scrapes the whole collection and pulls out the access status of each entry.
 
-This was raised with GPO, who were then able to take this information and consider how they might use it to verify that the overall collection completeness is as expected.
+This was raised with GPO, who were then able to take this information and consider how they might use it to verify that the overall collection completeness is as expected, and clarify the terms under which the deposited content has been made available.
 
 ### Running tools
 
@@ -384,7 +385,13 @@ This schema can be compared against the contents the ICUFL data folder like this
 python -m pathschema gpo-icufl.pathschema remote/GPO_CDFLOPPY_DATA/
 ```
 
-Running this produces a report listing all the files found in the data folder, and whether they meet the expected layout or now.
+Running this produces a report listing all the files found in the data folder, and whether they meet the expected layout or now. For example, here is the section of the output corresponding to one of the problems noted above:
+
+```
+FAIL  /workspaces/sandbox/remote/GPO_CDFLOPPY_DATA/2845618
+        Missing required file *-mets.xml
+        Missing required file *-marc.xml
+```
 
 This is not as precise as a custom script, as it does not check that the item identification numbers match up, that each `.idx` file corresponsed to a specific image file, or that the files are more than zero bytes in size.  However, it was pretty easy to set up and run, it's a lot easier to understand what it's doing, and it correctly spotted all the actual problems we found.
 
@@ -451,23 +458,65 @@ In order to be able to link the files in the images to the files on the web site
 As we were having to parse the METS anyway, it made sense to extract a few more useful bits of metadata at the same time. A small Python script was written that went through all the local files and built a CSV file ([`gpo-icufl-items.csv`](./data/gpo-icufl-items.csv)) with the basic metadata in it, like this:
 
 ```csv
-item_id,title,date,publisher,fids,fnames
-4909450,WAVE-saver for office buildings,[2000],EPA,FID77,30000078832957.iso
-4285370,Voluntary reporting of greenhouse gases,1996,"Voluntary Reporting of Greenhouse Gas Program, U.S. Dept. of Energy, Energy Information Administration",FID217|FID2078|FID2451|FID2474,30000044896086.iso|30000048805984.iso|32000000478034.iso|30000053565168.iso
+item_id,title,date,publisher,fids,fnames,access_conditions
+4909450,WAVE-saver for office buildings,[2000],EPA,FID77,30000078832957.iso,GOVUS
+4285370,Voluntary reporting of greenhouse gases,1996,"Voluntary Reporting of Greenhouse Gas Program, U.S. Dept. of Energy, Energy Information Administration",FID217|FID2078|FID2451|FID2474,30000044896086.iso|30000048805984.iso|32000000478034.iso|30000053565168.iso,GOVUS
 ...
 ```
 
-For reference, the source code for the script is included below:
+Or using Pandas:
+
+```{python}
+import pandas as pd
+
+df_items = pd.read_csv('./data/gpo-icufl-items.csv')
+
+df_items.head(5)
+```
+
+
+For reference, the source code for the METS parser script is included here:
 
 <details>
 <summary>Source code for <tt>parse_mets.py</tt></summary>
 
-```python
+```{.python .code-overflow-scroll}
 {{< include data/parse_mets.py >}}
 ```
 
 </details>
 
+### Access conditions
+
+This table can then be used to check aspects of the metadata. For example, what 'access conditions' are present:
+
+```{python}
+df_items.groupby(['access_conditions']).size().reset_index(name='counts')
+
+```
+
+As some of these values are not quite as expected, we can take a look at the ones that are not simply marked `GOVUS`:
+
+```{python}
+df_items[df_items["access_conditions"] != 'GOVUS']
+```
+
+Having been spotted, [2766887](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/2766887) and [7295326](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/7295326) can be reviewed by GPO to check if any action needs to be taken.
+
+Note that the access conditions in the METS can be quite complicted, with one condition asserted at the level of the whole record, and other for each individual media item. The script we used only looked at the latter, so record-level conditions (see e.g. [`For official use only.` in item 4243784](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4243784/mets)) are not visible here. By running [`grep`](https://en.wikipedia.org/wiki/Grep) on the METS, we can quickly enumerate the ones that are not simply `GOVUS`:
+
+```{.bash .code-overflow-scroll}
+grep accessCondition mets/* | grep -v ">GOVUS<"
+mets/1376188-mets.xml:          <mods:accessCondition type="restrictionOnAccess">The included file access software is a copyrighted product of the Asymetric Corp., Bellevue, WA, and may not be copied except as part of this application.</mods:accessCondition>
+mets/2766887-mets.xml:            <mods:accessCondition type="restrictionOnAccess">UNKNOWN</mods:accessCondition>
+mets/3478741-mets.xml:          <mods:accessCondition type="restrictionOnAccess">For official use only.</mods:accessCondition>
+mets/3677392-mets.xml:          <mods:accessCondition type="restrictionOnAccess">Some v. are for official use only, i.e. distribution of Oct. 1998 v. 2 is restricted.</mods:accessCondition>
+mets/4243784-mets.xml:          <mods:accessCondition type="restrictionOnAccess">For official use only.</mods:accessCondition>
+mets/4274834-mets.xml:          <mods:accessCondition type="restrictionOnAccess">Unclassified.</mods:accessCondition>
+mets/7295326-mets.xml:            <mods:accessCondition type="restrictionOnAccess">NOACCESS</mods:accessCondition>
+```
+
+These can also be passed back to GPO for review.
 
 ## Generating an index
 
@@ -481,7 +530,7 @@ A second script was then created, designed to build a index database from the av
 <details>
 <summary>Source code for <tt>generate_index.py</tt></summary>
 
-```python
+```{.python .code-overflow-scroll}
 {{< include data/generate_index.py >}}
 ```
 
@@ -577,9 +626,11 @@ duckdb.sql("""
   """).df()
 ```
 
+<!-- Not sure this adds much
+
 Or even to select the most common year for each combination of item and file extension:
 
-```{python}
+```python
 duckdb.sql("""
   SELECT item_id::INTEGER as item_id, extension, mode() WITHIN GROUP (ORDER BY date_part('year', make_timestamp(timestamp * 1_000_000))) as year, count(*) AS count
   FROM df
@@ -588,13 +639,21 @@ duckdb.sql("""
   """).df()
 ```
 
-These last queries show up a common problem with dates from filesystem metadata. Item `5548795` apparently contains 23 `.pdf` files from the year 2040! Nevertheless, this does show that date information can be extracted and so potentially used to help guide format identification, as most of the date data appears to be realistic (as shown above)
+-->
+
+This illustrates a common problem with dates from filesystem metadata not always being accurate: legacy files from the future! Nevertheless, this does show that date information can be extracted and so potentially used to help guide format identification, as most of the date data appears to be realistic (as shown above).
 
 ## Reusing the index
 
+The item-level CSV file and the file-level Parquet tables are well-suited to the kind of detailed querying and analysis outlined above. However, they are not very usable by most digital preservation practitions. However, they can be used to support other ways of exploring the collection.
+
 ### Publishing format collection profiles
 
-- extract extension profiles and use in Workbench
+As we're particularly interested in file formats, the file extension queries above were used to create a full [collection profile](https://www.digipres.org/workbench/formats/profiles/) and this was added to the [Digital Preservation Workbench](https://www.digipres.org/workbench/).
+
+This project was also an opportunity to make the Workbench a bit easier to use by separating out the functionality it provides.  Rather than having one big page, there are now separate pages for [comparing collections by file extensions](https://www.digipres.org/workbench/formats/profiles/compare) and [comparing a collection against potentially useful format identification tools and resources based on file extensions](https://www.digipres.org/workbench/formats/profiles/tools).
+
+If you visit those pages, you can now select `The Indiana University CD-ROM & Floppy Library (U.S. Government Publication Office)` as one of the options. This can be fed back to the GPO who can use it to start to explore the more unusual formats in the collection.
 
 ### An experimental exploration tool
 
@@ -610,7 +669,7 @@ These last queries show up a common problem with dates from filesystem metadata.
 ## Conclusions
 
 
-- Completeness
+- Completeness collection completeness is as expected, and clarify the terms under which the deposited content has been made available.
 - XML issues
 
 

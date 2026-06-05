@@ -18,7 +18,7 @@ href_attrib = f"{{{ns['xlink']}}}href"
 # Open a CSV file for output:
 with open('gpo-icufl-items.csv', 'w', newline='') as csv_file:
     items_writer = csv.writer(csv_file)
-    items_writer.writerow(['item_id', 'title', 'date', 'publisher', 'fids', 'fnames'])
+    items_writer.writerow(['item_id', 'title', 'date', 'publisher', 'fids', 'fnames', 'access_conditions'])
 
     # Loop through the METS files:
     path_list = Path('mets').glob('*.xml')
@@ -43,10 +43,17 @@ with open('gpo-icufl-items.csv', 'w', newline='') as csv_file:
         date = root.find('mets:dmdSec/mets:smdWrap/mets:xmlData/mods:mods/mods:originInfo/mods:dateIssued',ns)
         if date != None:
             date = date.text
+        # Publisher:
         publisher = root.find('mets:dmdSec/mets:smdWrap/mets:xmlData/mods:mods/mods:originInfo/mods:publisher',ns)
         if publisher != None:
             publisher = publisher.text
-
+        
+        # Access conditions, one per media source
+        access_conditions = []
+        for ac in root.findall('mets:dmdSec/mets:smdWrap/mets:xmlData/mods:mods/mods:relatedItem/mods:accessCondition',ns):
+            access_conditions.append(ac.text)
+        # Simplify by just enumerating the unique values:
+        access_conditions = list(set(access_conditions))
 
         # Get file ids and names:
         fids = []
@@ -59,5 +66,5 @@ with open('gpo-icufl-items.csv', 'w', newline='') as csv_file:
             fnames.append(fname)
 
         # Write to CSV:
-        items_writer.writerow([item_id, title.text, date, publisher, "|".join(fids), "|".join(fnames)])
+        items_writer.writerow([item_id, title.text, date, publisher, "|".join(fids), "|".join(fnames), "|".join(access_conditions)])
 
