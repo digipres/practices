@@ -19,7 +19,7 @@ resources:
 
 ::: {.callout-note}
 
-<a href="https://www.dpconline.org/"><img src="../../DPCLogoSquare.png" width="80px" style="float: right; margin: 5px;"></a>
+<a href="https://www.dpconline.org/"><img src="../../DPCLogoSquareSmall.png" style="float: right; margin: 5px;"/></a>
 This reports summarises work with the [U.S. Government Publishing Office](https://www.gpo.gov/) during April/May/June 2026. The work was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
 
 :::
@@ -258,11 +258,13 @@ We can then download and keep a copy of that data (compressed to save space) and
 
 ```{python}
 import pandas as pd
+# Experimenting with explicit HTML output to see how that affects ePub/PDF generation...
+from IPython.display import HTML
 
 df = pd.read_json('data/gpo.lsjson.gz')
 
 # Just show the first five entries:
-df.head(5)
+HTML(df.head(5).to_html())
 ```
 
 This is telling us about the folders as well as the files, and we're not particularly interested in folders, so we can use Pandas to filter out the entries where the `MimeType` is `inode/directory`, like this:
@@ -607,13 +609,23 @@ data = duckdb.sql("""
   ORDER BY year ASC, count DESC;
   """).df()
 
-alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
+chart = alt.Chart(data).mark_bar( width=alt.RelativeBandSize(0.8) ).encode(
     x = alt.X('year:O', axis=alt.Axis(labelAngle=-45)),
     y = 'count:Q',
     tooltip=['year', 'count']
 ).properties(width=420)
+
+# We save an PDF verison of the chart so we can embed the result in e.g. the PDF version of this page:
+chart.save("files-by-year.pdf")
 ```
 
+::: {.content-visible when-format="html"}
+chart
+:::
+
+::: {.content-visible unless-format="html"}
+![Number of files by year, based on file system metadata.](./files-by-year.pdf)
+:::
 
 This can be used to extend the item-level format profiles to facet by year (within each item):
 
@@ -660,6 +672,7 @@ If you visit those pages, you can now select `The Indiana University CD-ROM & Fl
 - extract fine-grained extension profile
 - Lookup extensions to find the items.
 - List the contents of specific items.
+- Note that it's slow, and could probably be much faster with multiple database indexed for particular queries.
 
 ## Access experiments
 
