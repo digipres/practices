@@ -32,11 +32,12 @@ for item in items:
         files_to_fids[fname] = fid
 
 # -------------------------------------------------------------
-# A helper class to write a Parquet file from a stream of dicts
-# e.g. sort_order = [('id', 'ascending')]
+# A helper class to write a Parquet file from a stream of dicts.
+# Using small batch_size will limit the maximum Parquet page size.
+# The syntax for sorting is like: sort_order = [('id', 'ascending')]
 # -------------------------------------------------------------
 class ParquetDictWriter(object):
-    def __init__(self, file_name, compression="snappy", batch_size=50_000, sort_order=None):
+    def __init__(self, file_name, compression="snappy", batch_size=1_048_576, sort_order=None):
         self.file_name = file_name
         self.compression = compression
         self.batch_size = batch_size
@@ -93,7 +94,9 @@ class ParquetDictWriter(object):
 
 
 # Build up index of files in items
-with ParquetDictWriter(parquet_file, sort_order=[('item_id', 'ascending'),('extension', 'ascending')]) as pw:
+with ParquetDictWriter(parquet_file, 
+                       compression="brotli", 
+                       sort_order=[('item_id', 'ascending'),('extension', 'ascending')]) as pw:
     with zipfile.ZipFile(idx_zip, "r") as f:
         for entry in f.infolist():
             # Skip directories:
