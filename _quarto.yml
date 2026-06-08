@@ -8,7 +8,6 @@ website:
   title: "DigiPres.org Practices"
   sidebar:
     style: "floating"
-    search: true
     contents:
       - index.qmd
       - href: reports/index.qmd
@@ -35,7 +34,7 @@ website:
     dismissable: true
     content: "**Warning** - This is an early-stage experimental prototype! All may change! See the homepage for more information."
     type: primary
-    position: above-navbar
+    position: below-navbar
 
 syntax-highlighting: pygments
 
