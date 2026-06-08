@@ -33,12 +33,14 @@ for item in items:
 
 # -------------------------------------------------------------
 # A helper class to write a Parquet file from a stream of dicts
+# e.g. sort_order = [('id', 'ascending')]
 # -------------------------------------------------------------
 class ParquetDictWriter(object):
-    def __init__(self, file_name, compression="snappy", batch_size=10_000):
+    def __init__(self, file_name, compression="snappy", batch_size=50_000, sort_order=None):
         self.file_name = file_name
         self.compression = compression
         self.batch_size = batch_size
+        self.sort_order = sort_order
 
     def __enter__(self):
         self.batch = []
@@ -47,35 +49,51 @@ class ParquetDictWriter(object):
         self.writer = None
         return self
     
+    def _init_writer(self, item):
+        table = pa.Table.from_struct_array(pa.array([item]))
+        self.schema = table.schema
+        # Sorting, if set:
+        sorting_columns= None
+        if self.sort_order:
+            sorting_columns = pq.SortingColumn.from_ordering(self.schema, self.sort_order)
+        # Open a Parquet file for writing
+        self.writer = pq.ParquetWriter(
+            self.file_name, self.schema, 
+            compression=self.compression, 
+            write_page_index=True, 
+            sorting_columns=sorting_columns
+        )
+
+    def _write_batch(self):
+        # Write chunk to the parquet file
+        table = pa.Table.from_struct_array(pa.array(self.batch))
+        # Sort the data, if requested:
+        if self.sort_order:
+            table = table.sort_by(self.sort_order)
+        # And write:
+        self.writer.write_table(table)
+        self.batch = []
+
     def write(self, item):
         self.counter += 1
         if self.writer == None:
-            table = pa.Table.from_struct_array(pa.array([item]))
-            self.schema = table.schema
-            # Open a Parquet file for writing
-            self.writer = pq.ParquetWriter(
-                self.file_name, self.schema, compression=self.compression
-            )
+            self._init_writer(item)
         # Process in chunks
         if self.counter % self.batch_size == 0:
-            # Write chunk to the parquet file
-            table = pa.Table.from_struct_array(pa.array(self.batch))
-            self.writer.write_table(table)
-            self.batch = []
+            self._write_batch()
         else:
             self.batch.append(item)
 
     def __exit__(self, type, value, traceback):
         if len(self.batch) > 0:
-            table = pa.Table.from_struct_array(pa.array(self.batch))
-            self.writer.write_table(table)
+            self._write_batch()
         # And close:
         self.writer.close()
 
 
 
 # Build up index of files in items
-with ParquetDictWriter(parquet_file) as pw:
+with ParquetDictWriter(parquet_file, sort_order=[('item_id', 'ascending'),('extension', 'ascending')]) as pw:
     with zipfile.ZipFile(idx_zip, "r") as f:
         for entry in f.infolist():
             # Skip directories:
