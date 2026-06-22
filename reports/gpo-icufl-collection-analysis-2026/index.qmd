@@ -669,32 +669,172 @@ If you visit those pages, you can now select `The Indiana University CD-ROM & Fl
 
 ### An experimental exploration tool
 
-- extract fine-grained extension profile
-- Lookup extensions to find the items.
-- List the contents of specific items.
-- Note that it's slow, and could probably be much faster with multiple database indexed for particular queries.
+As well as the summary profile, the item-level index offered a way to experiment with creating simple interfaces that make it easier to understand the collection.
+
+The first challenge was making a c. 100MB file available as part of the Digital Preservation Workbench. This is difficult because GitHub does not allow such large files to be stored directly in a Git repository (for various reasonable reasons!). They do [support](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage) an alternative called [Git LFS](https://git-lfs.com/), which takes a little additional setup, but does then allow larger binaries to be stored and integrated into the website.
+
+The other main challenge was that this is quite a large database, and so querying it directly from a web browser can be rather slow. It was important to make sure the Parquet database was built in a way that made this as performant as possible[^1], and with some work the resulting web interface is able to query the whole dataset in around ten seconds.
+
+The experimental tool allows anyone to look up a file extension in the database. The system then finds items that have that extension. If you select an item, the interface shows you some of the matching items. In all cases, it provides links to the web version so you can examine those files more closely.  It also shows a breakdown of all the file extensions found for that item, which makes it easier to start to spot patterns of file extensions that often appear together.
+
+The interface is here:
+
+<https://www.digipres.org/workbench/formats/profiles/gpo-icufl-explorer/>
 
 ## Access experiments
 
-- Deeper Dives (individual items)
-- Notes from deep dives on some examples, SAS 6 files, corrupted *DB* that wasn't actually corrupted in the end.
+To start to understand what kind of tools and approaches might be needed to re-use these files, a few individual items were inspected and explored.
+
+Some general notes:
+
+ - .ISO images can be directly mounted in Windows, or opened with 7-Zip
+ - .IMG floppy images can be opened with [FluxFox](https://dbalsom.github.io/fluxfox/) and in this case the files can generally be extracted that way as these are 'simple' PC floppy images.
+ - Many of the disks have quite good build-in documentation e.g [README.TXT](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4288667/FID1811/README.TXT)
+     - "Note that all SAS data sets (.SSD) are in version 6.03,  and that all WordPerfect files (.WPD) are version 6.1 for Windows."
+ - Looking for '.VOB' files in the Explorer (above) showed that some items are DVDs and would be accessible with e.g. VLC.
+
+
+###  [928393: Drinking water treatment plant advisor](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/928393)
+
+The first attempt at opening this disk image up used an online emulator: <https://copy.sh/v86/?profile=msdos>
+
+After connecting that up, it was possible to run the software installer, but the installation failed:
+
+![](./in-brower-msdos-error.png)
+
+However, later experimentation in the DigiPres Sandbox environment showed it was possible to run the software there. First, installing [DOSBox](https://www.dosbox.com/) and putting a copy of the image file somewhere handy:
+
+```
+sudo apt update
+sudo apt install dosbox
+cp remote/GPO_CDFLOPPY_DATA/928393/30000102588641.img /home/jovyan/floppy.img
+```
+
+Then it was possible to set up a folder to act as the `C:` drive and start `dosbox`:
+
+```bash
+mkdir dosbox-c
+dosbox
+```
+
+Then mount the folder within `dosbox`, like this:
+
+```dos
+MOUNT C dosbox-c
+C:
+```
+
+The floppy image could then be mounted, then switched to in order to run the installer:
+
+```dos
+IMGMOUNT A floppy.img -t floppy
+A:
+INSTALL.EXE
+```
+
+The software installed and ran, and it was possible to use the supplied [USERDOC.TXT](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/928393/FID2132/USERDOC.TXT) to work out what to do.
+
+The system comes with two example files, which you can load and use.
+
+So, in this case, this is a historical software artefact. It is currently still accessible as is.
+
+
+### [4951822: U.S. Air Force Health Study 1997 followup, cycle 5](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4951822/)
+
+This seemed to be a mixture of data and (PDF) reports, with some interesting notes:
+
+- "The data files on this CD are provided in SAS (.sd2) and flat or ASCII (.dat) formats (see note below).  The .txt and .rtf files in these subdirectories tell what is contained in the accompanying .sd2 and .dat files." 
+- "SAS (.sd2)" [4951822/FID2042/data/readme.txt](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4951822/FID2042/data/readme.txt)
+
+In this case, there is software here, but it's largely incidental. The extracted files are potentialyl useful, but both are challenging to work with. The DAT files could be read with some coding effort. The SAS files are more difficult because, after emailing SAS, it became clear that access to those files would be expensive.
+
+```
+Hi Andrew, 
+
+Thanks for your enquiry to SAS. Having investigated I understand, Base SAS 9.4 on Windows can read .sd2 files
+
+SAS 6.x datasets (.sd2, .ssd) are readable in Base SAS 9.4 on Windows using legacy engines.
+This requires no additional licensed products beyond Base SAS.
+The correct method is the legacy V6 / V604 LIBNAME engine
+
+SAS Version 6 files cannot be read via CEDA.
+It must be accessed with V6 or V604 in a LIBNAME statement.
+Access is read‑only, by design, which is expected and documented.
+Once read, the data can be copied or exported.
+
+After assigning the V6/V604 library, datasets can be:
+Copied into a WORK or permanent library (creating .sas7bdat)
+Exported to CSV or other modern formats
+If you require a SAS licence, I can put you in touch with the ales team here at SAS. Please, let me know if there's anything else I can assist you with.
+
+Kind regards,
+
+<<<REDACTED>>>
+
+EMEA Customer Engagement Centre
+```
+
+
+Note that cross searching for format registries for [.sd2](https://www.digipres.org/workbench/formats/lookup#*.sd2) indicated this may be 'Sound Designer II' files or SAS statistics software files ([WikiData reference only](https://www.wikidata.org/wiki/Q47483338)). At the time of writing, none of the existing sources capture that this file extension corresponds to SAS 6.
+
+
+### [923520: Urban soil lead abatement demonstration project : EPA data dictionary with associated data sets](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/923520)
+
+The same approach could also be applied here, although the installation process was different. We had to work out that the trick would be to change to the `C:` drive and then using the `PKUNZIP.EXE` program to extract the contents:
+
+```
+$ dosbox
+Z:\>MOUNT C dosbox-c
+Z:\>C:
+C:\>a:\PKUNZIP.EXE a:\USLADP.ZIP
+```
+
+This revealed a small collection of .SD2 files:
+
+```
+$ ls -l
+total 14240
+-rw-r--r-- 1 anj anj   98560 Apr 11  1996 BALCDL.SD2
+-rw-r--r-- 1 anj anj 4905216 Apr 11  1996 BALTOTL.SD2
+-rw-r--r-- 1 anj anj  276736 Apr 11  1996 BOSPH2L.SD2
+-rw-r--r-- 1 anj anj 1548544 Apr 11  1996 BOSTOTL.SD2
+-rw-r--r-- 1 anj anj   50944 Apr 11  1996 CINCDL.SD2
+-rw-r--r-- 1 anj anj  217344 Apr 11  1996 CINEDSTL.SD2
+-rw-r--r-- 1 anj anj 2276608 Apr 11  1996 CKIDTOTL.SD2
+-rw-r--r-- 1 anj anj 4990720 Apr 11  1996 CSLTOTL.SD2
+-rw-r--r-- 1 anj anj  193280 Apr 11  1996 CSLTOTXL.SD2
+```
+
+So these are similar to the prior case, but here no DATA alternative has been supplied. So while the original files can be retained, access will remain challenging.
+
+
+### [4303877: Comprehensive management and use plan, final environmental impact statement, California National Historic Trail, Pony Express National Historic Trail ; Management and use plan update, final environmental impact statement, Oregon National Historic Trail, Mormon Pioneer National Historic Trail](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4303877)
+
+Browsing this item [4303877/FID3792/](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4303877/FID3792) shows that the contents mostly a set of PDFs. Some files have odd dates (2106!) but these are in accompianing accessibility software.
+
+However, on closer inspection the PDF are found to be interlinked, using relative hyperlinks to move between the different PDFs. If the PDF's are unpacked into local files, this still works fine. However, this interconnection would be lost if the PDFs were ingesting in a preservation system as separate items. So even though these are 'just' PDFs, preserving the intended publication required the set of files to be kept together in the supplied heirarchy.
 
 ## Conclusions
 
 
-- Completeness collection completeness is as expected, and clarify the terms under which the deposited content has been made available.
-- XML issues
-
-
 1. Does this appear to be a complete record of the data presented via the web site?
-   - ...
+   - As indicated above, this does not appear to be a complete copy of the original web site.
+   - But the level of completeness is likely intentional.
+   - Next step is to work with the source to check this and clarify the terms under which the deposited content has been made available.
 2. Is this collection of disk images self-consistent? Does it appear to be valid?
-   - ...
+   - Largely self-consistent, but some items lack metadata, and the XML does not appear to correctly follow the intended METS schema.
 3. Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?
-   - ...
+   - Yes, in that other organisation also tend to keep disk images unless they have the resources to process individual carriers in more detail. In that case, they will make the decision to export to logical files or keep a physical disk image on a case-by-case basis.
+   - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (KBNL, NYPL, NLI, SLNSW). This might be a good place to start in any future work.
 4. What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as _'easy to access'/'safe to ignore'/'requires investigation'_?
-   - ...
+   - In many cases, the ISO/IMG container is a barrier to access and the files would work well outside of that disk image.
+   - But this is not universal, e.g. software disks or DVD Video.
+   - It was not possible to classify files as suggested. The investigation indicates that it might be possible to classify sets of related file extensions in this way, but this would require a significant amount of follow-up work.
 5. What might access look like? Does emulation play a role in this?
-   - ...
+   - The GPO directly supporting access to this very varied collection would likely be challenging.
+   - However, the GPO could make detailed information about the contents available, so as to encourage discovery and use, and support researchers who have the time and resources to restore access to these files. 
+   - This could include supporting documentation showing researchers how to use widely available open source tools to explore these disk images (building on the 'Access experiments' above).
+   - The results of working with researchers could be folded back into the collection as appropriate. e.g. if the researcher manages to migrate `.SD2` files to `.CSV` or similar.
 
 
+[^1]: Get in touch if you want more information on this!
