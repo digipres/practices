@@ -817,24 +817,24 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
 ## Conclusions
 
 
-1. Does this appear to be a complete record of the data presented via the web site?
+1. **Does this appear to be a complete record of the data presented via the web site?**
    - As indicated above, this does not appear to be a complete copy of the original web site.
    - But the level of completeness is likely intentional.
    - Next step is to work with the source to check this and clarify the terms under which the deposited content has been made available.
-2. Is this collection of disk images self-consistent? Does it appear to be valid?
+2. **Is this collection of disk images self-consistent? Does it appear to be valid?**
    - Largely self-consistent, but some items lack metadata, and the XML does not appear to correctly follow the intended METS schema.
-3. Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?
+3. **Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?**
    - Yes, in that other organisation also tend to keep disk images unless they have the resources to process individual carriers in more detail. In that case, they will make the decision to export to logical files or keep a physical disk image on a case-by-case basis.
    - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (KBNL, NYPL, NLI, SLNSW). This might be a good place to start in any future work.
-4. What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as _'easy to access'/'safe to ignore'/'requires investigation'_?
+4. **What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as _'easy to access'/'safe to ignore'/'requires investigation'_?**
    - In many cases, the ISO/IMG container is a barrier to access and the files would work well outside of that disk image.
    - But this is not universal, e.g. software disks or DVD Video.
    - It was not possible to classify files as suggested. The investigation indicates that it might be possible to classify sets of related file extensions in this way, but this would require a significant amount of follow-up work.
-5. What might access look like? Does emulation play a role in this?
+5. **What might access look like? Does emulation play a role in this?**
    - The GPO directly supporting access to this very varied collection would likely be challenging.
    - However, the GPO could make detailed information about the contents available, so as to encourage discovery and use, and support researchers who have the time and resources to restore access to these files. 
    - This could include supporting documentation showing researchers how to use widely available open source tools to explore these disk images (building on the 'Access experiments' above).
    - The results of working with researchers could be folded back into the collection as appropriate. e.g. if the researcher manages to migrate `.SD2` files to `.CSV` or similar.
 
 
-[^1]: Get in touch if you want more information on this!
+[^1]: This involved making sure the Parquet 'row groups' were large and hence not too numerous, as the metadata of each is loaded sequentially. Get in touch if you want more information on this!
