@@ -528,6 +528,7 @@ A second script was then created, designed to build a index database from the av
 - Read through the `.idx` files (stored in a ZIP file because they are quite bulky).
 - Extract the file-level information from the `.idx` files and combine with the item metadata.
 - Output the resulting table of information in the [Parquet](https://parquet.apache.org/) format.
+  - Note that this involved making sure the [Parquet row groups](https://parquet.apache.org/docs/concepts/) were large and so not too numerous, and using sorted columns where possible.
 
 <details>
 <summary>Source code for <tt>generate_index.py</tt></summary>
@@ -673,7 +674,7 @@ As well as the summary profile, the item-level index offered a way to experiment
 
 The first challenge was making a c. 100MB file available as part of the Digital Preservation Workbench. This is difficult because GitHub does not allow such large files to be stored directly in a Git repository (for various reasonable reasons!). They do [support](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage) an alternative called [Git LFS](https://git-lfs.com/), which takes a little additional setup, but does then allow larger binaries to be stored and integrated into the website.
 
-The other main challenge was that this is quite a large database, and so querying it directly from a web browser can be rather slow. It was important to make sure the Parquet database was built in a way that made this as performant as possible[^1], and with some work the resulting web interface is able to query the whole dataset in around ten seconds.
+The other main challenge was that this is quite a large database, and so querying it directly from a web browser can be rather slow. It was important to make sure the Parquet database was built in a way that made this as performant as possible, and with some work the resulting web interface is able to query the whole dataset in around ten seconds.
 
 The experimental tool allows anyone to look up a file extension in the database. The system then finds items that have that extension. If you select an item, the interface shows you some of the matching items. In all cases, it provides links to the web version so you can examine those files more closely.  It also shows a breakdown of all the file extensions found for that item, which makes it easier to start to spot patterns of file extensions that often appear together.
 
@@ -837,4 +838,3 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
    - The results of working with researchers could be folded back into the collection as appropriate. e.g. if the researcher manages to migrate `.SD2` files to `.CSV` or similar.
 
 
-[^1]: This involved making sure the Parquet 'row groups' were large and hence not too numerous, as the metadata of each is loaded sequentially. Get in touch if you want more information on this!
