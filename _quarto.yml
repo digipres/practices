@@ -46,6 +46,7 @@ format:
     toc: true
     code-fold: show
     code-overflow: wrap
+    number-sections: true
   epub: default
   pdf:
     title: pdf-title

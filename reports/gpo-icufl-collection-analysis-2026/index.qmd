@@ -20,7 +20,7 @@ resources:
 ::: {.callout-note}
 
 <a href="https://www.dpconline.org/"><img src="../../DPCLogoSquareSmall.png" style="float: right; margin: 5px;"/></a>
-This reports summarises work with the [U.S. Government Publishing Office](https://www.gpo.gov/) during April/May/June 2026. The work was funded by the [Digital Preservation Coalition Member Support programme](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
+This work was carried out during April/May/June 2026 as [member support](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members) for the [U.S. Government Publishing Office](https://www.gpo.gov/). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
 
 :::
 
@@ -432,7 +432,7 @@ remote/GPO_CDFLOPPY_DATA/1007939/1007939-mets.xml
 ...
 ```
 
-Rather than attempt to write a script (or do anything else complicated that it coulg go wrong), we used search and replace commands in the text editor (first `/[0-9]+-mets.xml/$0 local-mets\/$0/` then `/^/cp -n /`) to turn each line into a script that would copy each METS file into a `local-mets` folder:
+Rather than attempt to write a script (or do anything else complicated enough to go wrong), we used search and replace commands in the text editor (first `/[0-9]+-mets.xml/$0 local-mets\/$0/` then `/^/cp -n /`) to turn each line into a script that would copy each METS file into a `local-mets` folder:
 
 ```
 cp -n remote/GPO_CDFLOPPY_DATA/1006666/1006666-mets.xml local-mets/1006666-mets.xml
@@ -505,7 +505,7 @@ df_items[df_items["access_conditions"] != 'GOVUS']
 
 Having been spotted, [2766887](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/2766887) and [7295326](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/7295326) can be reviewed by GPO to check if any action needs to be taken.
 
-Note that the access conditions in the METS can be quite complicted, with one condition asserted at the level of the whole record, and other for each individual media item. The script we used only looked at the latter, so record-level conditions (see e.g. [`For official use only.` in item 4243784](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4243784/mets)) are not visible here. By running [`grep`](https://en.wikipedia.org/wiki/Grep) on the METS, we can quickly enumerate the ones that are not simply `GOVUS`:
+Note that the access conditions in the METS can be quite complicated, with one condition asserted at the level of the whole record, and other for each individual media item. The script we used only looked at the latter, so record-level conditions (see e.g. [`For official use only.` in item 4243784](https://webapp1.dlib.indiana.edu/virtual_disk_library/index.cgi/4243784/mets)) are not visible here. By running [`grep`](https://en.wikipedia.org/wiki/Grep) on the METS, we can quickly enumerate the ones that are not simply `GOVUS`:
 
 ```{.bash .code-overflow-scroll}
 grep accessCondition mets/* | grep -v ">GOVUS<"
@@ -621,7 +621,13 @@ chart.save("files-by-year.pdf")
 ```
 
 ::: {.content-visible when-format="html"}
+
+
+```{python}
+#| echo: false
 chart
+```
+
 :::
 
 ::: {.content-visible unless-format="html"}
