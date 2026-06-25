@@ -855,14 +855,14 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
     - Largely self-consistent but some items lack metadata (see @sec-item-completeness), and the XML does not appear to correctly follow the intended METS schema (see @sec-item-inspect).
 3.  **Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?**
     - Yes, in that other organisation also tend to keep disk images unless they have the resources to process individual carriers in more detail. In that case, they will make the decision to export to logical files or keep a physical disk image on a case-by-case basis.
-    - When considering whether to keep a disk image or extract the files, I'd recommend starting with the [Disk Imaging Decision Factors](https://dannng.github.io/disk-imaging-decision-factors.html) from [Digital Archival traNsfer, iNgest, and packagiNg Group (DANNNG!)](https://dannng.github.io/).
+    - When considering whether to keep a disk image or extract the files, start with the [Disk Imaging Decision Factors](https://dannng.github.io/disk-imaging-decision-factors.html) from [Digital Archival traNsfer, iNgest, and packagiNg Group (DANNNG!)](https://dannng.github.io/).
     - Follow-on work could look to canvas those organisations to gain more insight into this decision making process, to see what common practices might emerge. This could also involve working with DANNNG! to augment their existing resources.
     - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (KBNL, NYPL, NLI, SLNSW). This might be a good place to start in any future work.
 4.  **What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as *'easy to access'/'safe to ignore'/'requires investigation'*?**
     - In many cases, the ISO/IMG container is a barrier to access and the files would work well outside of that disk image.
     - But this is not universal, e.g. software disks or DVD Video work better as complete images, and some sets of files should be kept in their original folder structures.
     - Distinguishing these cases is not very easy. It is a lot of work to go though all the images and manually review them, and there are no known tools that support automating this process.
-    - It was not possible to classify files as suggested, and indeed it became clear that classifying individual files based on format might not be very effective.
+    - It was not possible to classify individual files as suggested, and indeed it became clear that classifying individual files based on format might not be very effective.
     - However, it might be possible to usefully identify *sets* of related file extensions and use that to classify media, but this would mean follow-up work developing new tools or extending existing ones.
 5.  **What might access look like? Does emulation play a role in this?**
     - The GPO directly supporting access to this very varied collection would likely be challenging.
