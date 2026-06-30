@@ -175,7 +175,7 @@ However, while looking at the METS files in VS Code, the editor appeared to indi
 
 ![Screenshot showing the XML issues in VS Code using the RedHat XML extension](./example-mets-problems.png)
 
-This shows two problems:
+If you look closely, you can see two sections have red underlines. Selecting these opened up a console revealing two problems:
 
 - *Error while downloading 'http://www.loc.gov/standards/mods/v3/mods-3-0.xsd'. Server returned HTTP response code: 503 for URL: http://www.loc.gov/standards/mods/v3/mods-3-0.xsd with code: 503 Service Unavailable'.*
 - *Element name 'smdWrap' is invalid. One of the following is expected: mdRef, mdWrap*
@@ -541,7 +541,7 @@ This format was used because there are over six million files in this collection
 
 ## Using the index
 
-The Pandas library understand the Parquet format, so this can be used to explore the data:
+The Pandas library understands the Parquet format, so this can be used to explore the data:
 
 ```{python}
 import pandas as pd
@@ -551,7 +551,7 @@ df = pd.read_parquet('./data/gpo-icufl-files.parquet')
 df.head(5)
 ```
 
-However, the Pandas query language is quite cumbersome. Instead, we can use the [DuckDB](https://duckdb.org/) run SQL queries on those data tables.
+However, the Pandas query language is quite cumbersome. Instead, we can use a tool called [DuckDB](https://duckdb.org/) to run SQL queries on those data tables.
 
 ### File extensions
 
@@ -857,7 +857,7 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
     - Yes, in that other organisation also tend to keep disk images unless they have the resources to process individual carriers in more detail. In that case, they will make the decision to export to logical files or keep a physical disk image on a case-by-case basis.
     - When considering whether to keep a disk image or extract the files, start with the [Disk Imaging Decision Factors](https://dannng.github.io/disk-imaging-decision-factors.html) from [Digital Archival traNsfer, iNgest, and packagiNg Group (DANNNG!)](https://dannng.github.io/).
     - Follow-on work could look to canvas those organisations to gain more insight into this decision making process, to see what common practices might emerge. This could also involve working with DANNNG! to augment their existing resources.
-    - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (KBNL, NYPL, NLI, SLNSW). This might be a good place to start in any future work.
+    - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (National Library of the Netherlands, New York Public Library, National Library of Ireland, State Library of New South Wales). This might be a good place to start in any future work.
 4.  **What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as *'easy to access'/'safe to ignore'/'requires investigation'*?**
     - In many cases, the ISO/IMG container is a barrier to access and the files would work well outside of that disk image.
     - But this is not universal, e.g. software disks or DVD Video work better as complete images, and some sets of files should be kept in their original folder structures.
