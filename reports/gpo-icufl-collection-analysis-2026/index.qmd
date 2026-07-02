@@ -30,7 +30,7 @@ The goal of this review is to survey these files, determine if the data appears 
 ### Questions
 
 1.  Does this appear to be a complete record of the data presented via the web site?
-2.  Is this collection of disk images self-consistent? Does it appear to be valid?
+2.  Is this collection of disk images self-consistent and valid? e.g. is the information is consistently laid out? Do all implied or explicit internal and external references resolve? Do the file structures and the files themselves appear to be valid?
 3.  Is this what these kind of captures 'typically' look like? What have others done with large collections of disk images like this?
 4.  What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as *'easy to access'/'safe to ignore'/'requires investigation'*?
 5.  What might access look like? Does emulation play a role in this?
@@ -365,7 +365,9 @@ And no mismatches were found.
 
 ### Alternative techniques
 
-Using a custom Python script and the Pandas table and query language in this way does work, but the whole thing very specific to this case and the implementation and the presentation of results is quite complicated. It would be much better to have a way of more explicitly specifying expected directory layouts in an understandable way, a bit like format signatures. Projects like [`pathschema`](https://apollo-roboto.dev/projects/pathschema/) and [`dirschema`](https://materials-data-science-and-informatics.github.io/dirschema/) potentially establish a lot of the groundwork for this, and an interesting follow-on project would be to look at extending this to identify file layout conventions like data packages.
+Using a custom Python script and the Pandas table and query language in this way does work, but the whole thing very specific to this case and the implementation and the presentation of results is quite complicated. It would be much better to have a way of more explicitly specifying expected directory layouts in an understandable way, a bit like format signatures. Projects like [`pathschema`](https://apollo-roboto.dev/projects/pathschema/) and [`dirschema`](https://materials-data-science-and-informatics.github.io/dirschema/) potentially establish a lot of the groundwork for this, and an interesting follow-on project would be to look at extending this to identify file layout conventions like data packages.[^1]
+
+[^1]: The search for possible tools for this tactic was one place that Claude's AI search proved useful. Traditional search had not revealed many options, but the particular fuzziness of this question was a good match for LLM-assisted discovery. (Specifically, by "particular fuzziness" I mean that I believe this will be a relatively widespread concept, but the specific words used to describe it will be very dependent on the context.) The prompt "Is there a standard/widespread way to declare the expected layout of a set of files as a 'schema' and then validate a set of files against that schema?" immediately uncovered multiple new options worth investigating.
 
 Indeed, a brief experiment with the `pathschema` tool showed that it was possible to create a `gpo-icufl.pathschema` file that [uses globs and regular expressions](https://github.com/ApolloRoboto/python-pathschema#syntax) to define the expected file naming conventions:
 
@@ -857,7 +859,7 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
     - Yes, in that other organisation also tend to keep disk images unless they have the resources to process individual carriers in more detail. In that case, they will make the decision to export to logical files or keep a physical disk image on a case-by-case basis.
     - When considering whether to keep a disk image or extract the files, start with the [Disk Imaging Decision Factors](https://dannng.github.io/disk-imaging-decision-factors.html) from [Digital Archival traNsfer, iNgest, and packagiNg Group (DANNNG!)](https://dannng.github.io/).
     - Follow-on work could look to canvas those organisations to gain more insight into this decision making process, to see what common practices might emerge. This could also involve working with DANNNG! to augment their existing resources.
-    - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (National Library of the Netherlands, [New York Public Library](https://nypl.github.io/digarch/transfers/nimbie-transfers.html), National Library of Ireland, State Library of New South Wales). This might be a good place to start in any future work.
+    - Many organisations use (or are evaluating the use of) [IROMLAB](https://github.com/KBNLresearch/iromlab) to process large optical media collections (National Library of the Netherlands, [New York Public Library](https://nypl.github.io/digarch/transfers/nimbie-transfers.html), National Library of Ireland, State Library of New South Wales), and this can also be used to process collections without using a media transfer robot (see [A Guide to the Installation of IsoBuster, IROMLAB and IROMSGL](https://www.dpconline.org/blog/wdpd/wdpd2023-murphy)). This might be a good initial approach for any future work, and a chance to establish a real community of practice in this area.
 4.  **What files and formats are inside the disk images? Could the files be kept as plain files rather than disk images? Can we scan and classify files and formats as *'easy to access'/'safe to ignore'/'requires investigation'*?**
     - In many cases, the ISO/IMG container is a barrier to access and the files would work well outside of that disk image.
     - But this is not universal, e.g. software disks or DVD Video work better as complete images, and some sets of files should be kept in their original folder structures.
@@ -866,6 +868,7 @@ However, on closer inspection the PDF are found to be interlinked, using relativ
     - However, it might be possible to usefully identify *sets* of related file extensions and use that to classify media, but this would mean follow-up work developing new tools or extending existing ones.
 5.  **What might access look like? Does emulation play a role in this?**
     - The GPO directly supporting access to this very varied collection would likely be challenging.
-    - However, the GPO could make detailed information about the contents available, so as to encourage discovery and use, and aim to work with researchers who have the time and resources to restore access to these files.
+    - However, in contrast to many other collection holders, this collection is openly accessible and does not require sensitivity review. This means that GPO staff do not necessarily have to manage and mediate access themselves, as is usually required for sensitive or unprocessed collections.
+    - Instead, the GPO could make detailed information about the contents available, so as to encourage discovery and use, and aim to work with researchers who have the time and resources to restore access to these files.
     - This could include supporting documentation showing researchers how to use widely-available open source tools to explore these disk images (building on the 'Access experiments' in @sec-access-expts).
     - The results of working with researchers could be folded back into the collection as appropriate. e.g. if the researcher manages to migrate `.SD2` files to `.CSV`.
