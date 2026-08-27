@@ -14,7 +14,7 @@ jupyter: python3
 resources:
   - "data/gpo-icufl-items.csv"
   - "data/gpo-icufl-files.parquet"
-draft: true
+draft: false
 ---
 
 ::: callout-note
