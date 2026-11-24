@@ -18,7 +18,7 @@ draft: false
 ---
 
 ::: callout-note
-<a href="https://www.dpconline.org/"><img src="../../DPCLogoSquareSmall.png" style="float: right; margin: 5px;"/></a> This work was carried out during April/May/June 2026 as [member support](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members) for the [U.S. Government Publishing Office](https://www.gpo.gov/). If you have any questions, please do [get in touch](mailto:info@dpconline.org).
+<a href="https://www.dpconline.org/"><img src="../../DPCLogoSquareSmall.png" style="float: right; margin: 5px;"/></a> This work was carried out during April/May/June 2026, starting out as [member support](https://www.dpconline.org/digipres/discover-good-practice/dedicated-support-for-members) for the [U.S. Government Publishing Office](https://www.gpo.gov/).  We think the methodology and the results will be of interest to other DPC members and the wider digital preservation community, so we spent some additional time writing this up and publishing it here. If you have any questions, please do [get in touch](mailto:info@dpconline.org).
 :::
 
 ## Introduction
